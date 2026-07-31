@@ -1,183 +1,106 @@
-Welcome to your new TanStack Start app!
+# portfolio
 
-# Getting Started
-
-To run this application:
+Personal portfolio site — cyberpunk-leaning, dark, neon. React 19 + TanStack Router
+(file-based, SPA) + Tailwind v4 + Vite.
 
 ```bash
 npm install
-npm run dev
+npm run dev        # http://localhost:3000
+npm run build      # -> dist/
+npm run preview
+npm run typecheck
 ```
 
-# Building For Production
+## Where to edit what
 
-To build this application for production:
+Content is fully separated from presentation. For everyday updates you should
+only need to touch `src/data/`:
 
-```bash
-npm run build
+| File | Holds |
+| --- | --- |
+| `src/data/profile.ts` | Name, roles, location, bio, email, socials, `openToWork` flag |
+| `src/data/projects.ts` | Project catalogue. `featured: true` surfaces it on the home page |
+| `src/data/skills.ts` | Skill groups (about page) + the home-page ticker |
+| `src/data/timeline.ts` | Education / experience entries for the about page |
+
+Everything currently in `src/data/` is **placeholder content** marked with
+`TODO`. Replace it before shipping.
+
+## Structure
+
+```
+src/
+  routes/            file-based routes -> routeTree.gen.ts (generated, don't edit)
+    __root.tsx       app shell: backdrop, header, footer, 404
+    index.tsx        home
+    projects.tsx     work index + stack filter
+    about.tsx        bio, skills, timeline
+    contact.tsx      email + socials
+  components/
+    layout/          Backdrop, ViewportFrame, SiteHeader, SiteFooter, PageShell
+    ui/              Panel, Tag, StatusPill, SectionHeading, button
+    home/            Hero, SkillTicker
+    projects/        ProjectCard
+  data/              all site content (see above)
+  lib/cn.ts          class joiner
+  styles.css         design system — tokens, base, utilities
 ```
 
-## Styling
+Imports use the `#/` alias for `src/` (declared in both `package.json#imports`
+and `tsconfig.json#paths`), e.g. `import { Panel } from '#/components/ui/Panel'`.
 
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
+## Design system
 
-### Removing Tailwind CSS
+All of it lives in `src/styles.css`. Change the theme there, not in components.
 
-If you prefer not to use Tailwind CSS:
+**Art direction** follows the Marathon (Bungie) UI language: near-black ground,
+bone-white fills, and exactly **one** accent. Flat colour — no glow, no bloom,
+no texture. Hierarchy comes from contrast, weight and negative space. The
+accent, light fill and black are sampled from the reference art.
 
-1. Remove the demo pages in `src/routes/demo/`
-2. Replace the Tailwind import in `src/styles.css` with your own styles
-3. Remove `tailwindcss()` from the plugins array in `vite.config.ts`
-4. Remove `@tailwindcss/vite` and `tailwindcss` from `package.json`
+**Tokens** (`@theme`) — Tailwind v4 generates utilities from each one:
 
+- Ground: `base` (`#06080A`), `surface`, `surface-2`
+- Hairlines: `line` (default rule), `line-2` (hover/active)
+- Bone: `bone` (`#E3E3E3`), `bone-dim`, `bone-faint`
+- Accent: `acid` (`#A0C516`), `acid-2` (hover), `acid-deep` (low-emphasis)
+- Fonts: `font-display` (Chakra Petch), `font-sans` (Archivo), `font-mono` (JetBrains Mono)
+- Easing: `ease-ui`
 
+**Custom utilities:**
 
-## Routing
+- `label-mono` — tracked uppercase mono for indices, meta and eyebrows. Used
+  heavily; it carries most of the "technical readout" character.
+- `label-micro` — smaller still, for the annotations pinned to the viewport frame
+- `display-wide` — tracked uppercase display type, after the reference's menu labels
+- `fill-acid` / `fill-bone` — the button fills. Both carry the barely-there
+  vertical gradient from the reference; don't flatten them to a solid colour or
+  the light fills read as plain white boxes.
 
-This project uses [TanStack Router](https://tanstack.com/router) with file-based routing. Routes are managed as files in `src/routes`.
+**Animations:** `animate-caret`, `animate-ticker`, `animate-breathe`.
 
-### Adding A Route
+### Conventions
 
-To add a new route to your application just add a new file in the `./src/routes` directory.
+- **One accent.** `acid` marks the single most important thing in a view — the
+  primary action, the active nav item, a live project. Spending it anywhere else
+  costs it its weight. Everything else separates by grey value.
+- **Panels**: use `<Panel>` rather than hand-rolling borders. `ticks` adds the
+  corner brackets, `title`/`meta` add the top strip, `accent="acid"` is reserved
+  for the one panel that matters most on a page.
+- **Buttons**: `buttonClass(variant, size, extra)` returns a class string rather
+  than a component, so the same styling applies to `<button>`, `<a>` and
+  TanStack `<Link>` without fighting router generics. Tiers are `acid` (one per
+  view) → `bone` → `line`.
+- **Motion**: a global `prefers-reduced-motion` guard in `@layer base` disables
+  all animations and transitions, so individual components don't need their own
+  escape hatch. Keep new animation restrained and decorative — never encode
+  meaning in motion alone.
 
-TanStack will automatically generate the content of the route file for you.
+## Notes
 
-Now that you have two routes you can use a `Link` component to navigate between them.
-
-### Adding Links
-
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
-
-```tsx
-import { Link } from "@tanstack/react-router";
-```
-
-Then anywhere in your JSX you can use it like so:
-
-```tsx
-<Link to="/about">About</Link>
-```
-
-This will create a link that will navigate to the `/about` route.
-
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
-
-### Using A Layout
-
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you render `{children}` in the `shellComponent`.
-
-Here is an example layout that includes a header:
-
-```tsx
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
-
-export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      { charSet: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { title: 'My App' },
-    ],
-  }),
-  shellComponent: ({ children }) => (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        <header>
-          <nav>
-            <Link to="/">Home</Link>
-            <Link to="/about">About</Link>
-          </nav>
-        </header>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  ),
-})
-```
-
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
-
-## Server Functions
-
-TanStack Start provides server functions that allow you to write server-side code that seamlessly integrates with your client components.
-
-```tsx
-import { createServerFn } from '@tanstack/react-start'
-
-const getServerTime = createServerFn({
-  method: 'GET',
-}).handler(async () => {
-  return new Date().toISOString()
-})
-
-// Use in a component
-function MyComponent() {
-  const [time, setTime] = useState('')
-  
-  useEffect(() => {
-    getServerTime().then(setTime)
-  }, [])
-  
-  return <div>Server time: {time}</div>
-}
-```
-
-## API Routes
-
-You can create API routes by using the `server` property in your route definitions:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-import { json } from '@tanstack/react-start'
-
-export const Route = createFileRoute('/api/hello')({
-  server: {
-    handlers: {
-      GET: () => json({ message: 'Hello, World!' }),
-    },
-  },
-})
-```
-
-## Data Fetching
-
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
-
-For example:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-
-export const Route = createFileRoute('/people')({
-  loader: async () => {
-    const response = await fetch('https://swapi.dev/api/people')
-    return response.json()
-  },
-  component: PeopleComponent,
-})
-
-function PeopleComponent() {
-  const data = Route.useLoaderData()
-  return (
-    <ul>
-      {data.results.map((person) => (
-        <li key={person.name}>{person.name}</li>
-      ))}
-    </ul>
-  )
-}
-```
-
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
-
-
-
-# Learn More
-
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
-
-For TanStack Start specific documentation, visit [TanStack Start](https://tanstack.com/start).
+- This is a client-rendered SPA. There is no SSR, no server functions, no API
+  routes — `index.html` is the shell and holds the `<title>`/meta tags.
+- Route code-splitting is automatic (`autoCodeSplitting` in `vite.config.ts`).
+- Devtools are dev-only and stripped from production builds.
+- Fonts load from Google Fonts via `index.html`. Self-host them if you want to
+  drop the third-party request.
