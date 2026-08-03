@@ -228,7 +228,7 @@ export function NameMatrix({
 
     const BONE = token('--color-bone', [230, 228, 223])
     const LINE = token('--color-line', [59, 59, 54])
-    const ACID = token('--color-acid', [160, 197, 22])
+    const ACID = token('--color-acid', [184, 224, 25])
     // The hotspot reads as the same phosphor driven harder, not a new hue.
     const ACID_HOT = mix(ACID, [255, 255, 255], 0.38)
 
