@@ -21,14 +21,13 @@ function ContactPage() {
       <div className="grid gap-5 md:grid-cols-[1.3fr_1fr]">
         <Panel
           accent="acid"
-          ticks
           title="primary channel"
           className="flex flex-col justify-between gap-8 p-8"
         >
           <div>
             <a
               href={`mailto:${profile.email}`}
-              className="display-wide text-xl font-semibold break-all transition-colors hover:text-acid sm:text-2xl"
+              className="display-wide text-xl font-semibold break-all underline decoration-line-2 underline-offset-8 transition-colors hover:decoration-acid sm:text-2xl"
             >
               {profile.email}
             </a>
@@ -54,9 +53,9 @@ function ContactPage() {
                   href={social.href}
                   target={social.href.startsWith('http') ? '_blank' : undefined}
                   rel={social.href.startsWith('http') ? 'noreferrer' : undefined}
-                  className="flex items-baseline justify-between gap-4 border-b border-line pb-3 transition-colors hover:border-acid/50"
+                  className="group/link flex items-baseline justify-between gap-4 border-b border-line pb-3 transition-colors hover:border-line-2"
                 >
-                  <span className="display-wide text-sm font-semibold transition-colors hover:text-acid">
+                  <span className="display-wide text-sm font-semibold text-bone-dim transition-colors group-hover/link:text-bone">
                     {social.label}
                   </span>
                   <span className="label-mono truncate text-bone-faint">

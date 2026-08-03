@@ -26,9 +26,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
       meta={<StatusPill status={project.status} />}
     >
       <div>
-        <h3 className="display-wide text-lg font-semibold transition-colors group-hover:text-acid">
-          {project.title}
-        </h3>
+        <h3 className="display-wide text-lg font-semibold">{project.title}</h3>
         <p className="mt-1 text-sm text-bone-dim">{project.tagline}</p>
       </div>
 
@@ -54,7 +52,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
                   href={href}
                   target="_blank"
                   rel="noreferrer"
-                  className="label-mono text-bone-dim transition-colors hover:text-acid"
+                  className="label-mono text-bone-dim transition-colors hover:text-bone"
                 >
                   {linkLabels[key as keyof typeof linkLabels]} ↗
                 </a>

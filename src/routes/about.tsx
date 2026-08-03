@@ -33,7 +33,7 @@ function AboutPage() {
           ))}
         </div>
 
-        <Panel ticks title="stack" className="h-fit p-6">
+        <Panel title="stack" className="h-fit p-6">
           <div className="space-y-6">
             {skillGroups.map((group) => (
               <div key={group.title}>
@@ -63,8 +63,8 @@ function AboutPage() {
                 aria-hidden
                 className={
                   entry.kind === 'work'
-                    ? 'absolute top-2.5 -left-[2.1rem] size-2 rounded-full bg-acid'
-                    : 'absolute top-2.5 -left-[2.1rem] size-2 rounded-full border border-bone-faint bg-base'
+                    ? 'absolute top-2.5 -left-[2.1rem] size-2 bg-orange'
+                    : 'absolute top-2.5 -left-[2.1rem] size-2 border border-bone-faint bg-ground'
                 }
               />
               <p className="label-mono mb-2 text-bone-faint">{entry.period}</p>
@@ -78,7 +78,7 @@ function AboutPage() {
                     key={point}
                     className="flex gap-2.5 text-sm text-bone-dim/80"
                   >
-                    <span aria-hidden className="mt-2 size-1 shrink-0 rounded-full bg-acid/60" />
+                    <span aria-hidden className="mt-3 h-px w-2.5 shrink-0 bg-line-2" />
                     {point}
                   </li>
                 ))}

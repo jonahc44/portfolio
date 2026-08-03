@@ -1,16 +1,21 @@
 import { cn } from '#/lib/cn'
 
 /**
- * Three tiers, mirroring the reference UI:
- *   acid    — the one primary action on a view (filled lime, black label)
- *   bone    — secondary (filled light grey, black label)
- *   line    — tertiary (transparent, hairline border)
+ * Three tiers. Fills are flat ink on a square field — screen-printed panel
+ * labels, not glossy chrome.
+ *
+ *   acid — the ONE primary action on a view (green fill, ground-dark label)
+ *   bone — secondary (off-white fill, ground-dark label)
+ *   line — tertiary (transparent, hairline border)
+ *
+ * Note that `line` brightens to bone on hover rather than to an accent: hover
+ * is not a state worth spending the accent on.
  */
 export type ButtonVariant = 'acid' | 'bone' | 'line'
 export type ButtonSize = 'sm' | 'md'
 
 const base =
-  'display-wide inline-flex items-center justify-center gap-2 rounded-md font-semibold transition-colors duration-150 ease-ui select-none'
+  'display-wide inline-flex items-center justify-center gap-2 font-semibold transition-colors duration-150 ease-ui select-none'
 
 const sizes: Record<ButtonSize, string> = {
   sm: 'px-3.5 py-1.5 text-[0.7rem]',
@@ -18,9 +23,9 @@ const sizes: Record<ButtonSize, string> = {
 }
 
 const variants: Record<ButtonVariant, string> = {
-  acid: 'fill-acid text-black hover:bg-acid-2 hover:bg-none',
-  bone: 'fill-bone text-black hover:bg-white hover:bg-none',
-  line: 'border border-line text-bone-dim hover:border-acid hover:text-acid',
+  acid: 'bg-acid text-ground hover:bg-acid-2',
+  bone: 'bg-bone text-ground hover:bg-white',
+  line: 'border border-line text-bone-dim hover:border-line-2 hover:text-bone',
 }
 
 /**

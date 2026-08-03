@@ -9,20 +9,20 @@ const navItems = [
 ] as const
 
 const linkBase =
-  'display-wide rounded-md px-3 py-1.5 text-xs font-semibold text-bone-dim transition-colors duration-150 ease-ui hover:text-bone'
+  'display-wide px-3 py-1.5 text-xs font-semibold text-bone-dim transition-colors duration-150 ease-ui hover:text-bone'
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-50 border-b border-line bg-base/85 backdrop-blur-sm">
+    <header className="sticky top-0 z-50 border-b border-line bg-ground">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-5 sm:px-8">
         <Link to="/" className="group flex items-center gap-2.5">
           <span
             aria-hidden
-            className="fill-acid grid size-6 place-items-center rounded font-display text-xs font-bold text-black"
+            className="grid size-6 place-items-center bg-acid font-display text-xs font-bold text-ground"
           >
             J
           </span>
-          <span className="display-wide text-sm font-semibold transition-colors group-hover:text-acid">
+          <span className="display-wide text-sm font-semibold transition-colors group-hover:text-bone">
             {profile.handle}
           </span>
         </Link>
@@ -36,7 +36,7 @@ export function SiteHeader() {
                   activeOptions={{ exact: item.to === '/' }}
                   className={linkBase}
                   activeProps={{
-                    className: 'fill-acid text-black! hover:text-black',
+                    className: 'bg-acid text-ground! hover:text-ground',
                   }}
                 >
                   {item.label}
@@ -46,12 +46,12 @@ export function SiteHeader() {
           </ul>
         </nav>
 
-        {/* Status chip, after the small badges in the reference's header. */}
+        {/* Availability readout, not a badge — orange label, no fill, no pulse. */}
         {profile.openToWork ? (
-          <div className="label-mono hidden items-center gap-1.5 rounded-full border border-acid/40 px-2.5 py-1 text-acid lg:flex">
-            <span aria-hidden className="animate-breathe size-1.5 rounded-full bg-acid" />
+          <p className="label-micro hidden items-center gap-2 text-orange lg:flex">
+            <span aria-hidden className="size-1.5 bg-orange" />
             Open to work
-          </div>
+          </p>
         ) : null}
       </div>
     </header>

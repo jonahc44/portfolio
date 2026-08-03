@@ -1,7 +1,6 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 
 import { Hero } from '#/components/home/Hero'
-import { SkillTicker } from '#/components/home/SkillTicker'
 import { ProjectCard } from '#/components/projects/ProjectCard'
 import { Panel } from '#/components/ui/Panel'
 import { SectionHeading } from '#/components/ui/SectionHeading'
@@ -15,9 +14,8 @@ function Home() {
   return (
     <>
       <Hero />
-      <SkillTicker />
 
-      <section className="mx-auto max-w-6xl px-5 py-24 sm:px-8">
+      <section className="mx-auto max-w-6xl border-t border-line px-5 py-24 sm:px-8">
         <SectionHeading
           index="02 / work"
           title="Selected work"
@@ -37,10 +35,10 @@ function Home() {
       </section>
 
       <section className="mx-auto max-w-6xl px-5 pb-24 sm:px-8">
-        <Panel accent="acid" ticks className="p-8 sm:p-12">
+        <Panel accent="acid" className="p-8 sm:p-12">
           <div className="flex flex-col items-start justify-between gap-8 lg:flex-row lg:items-center">
             <div>
-              <p className="label-mono mb-4 text-acid">03 / contact</p>
+              <p className="label-mono mb-4 text-orange">03 / contact</p>
               <h2 className="display-wide max-w-lg text-2xl font-semibold sm:text-3xl">
                 Building something interesting?
               </h2>
