@@ -7,15 +7,18 @@ import { cn } from '#/lib/cn'
 
    The board is drawn on a canvas: every cell of the grid gets a dot, unlit
    cells included, so the thing reads as a panel with LEDs in it rather than as
-   text made of circles. Three behaviours sit on top:
+   text made of circles. Two behaviours sit on top:
 
      ignition  a left-to-right scan on load, each dot flashing bright before it
                settles — a tube warming up, not a fade-in
-     ambient   a slow highlight sweeping across the board plus a low-amplitude
-               vertical wave, so the panel is never completely still
      pointer   a pool of acid green follows the cursor — only the dots inside
                it change colour, and they move barely at all, so the name stays
                readable while you sweep across it
+
+   Between the two the board is completely still: no ambient shimmer, no drift,
+   and the render loop parks itself rather than repainting an identical frame.
+   Motion only ever happens because the page just loaded or because someone is
+   pointing at it.
 
    All motion is disabled under prefers-reduced-motion; the colour response to
    the pointer is kept, since that's state rather than movement.
@@ -70,7 +73,13 @@ type Dot = {
   delay: number
 }
 
-type Board = { cols: number; rows: number; dots: Array<Dot> }
+type Board = {
+  cols: number
+  rows: number
+  dots: Array<Dot>
+  /** Delay of the last dot to fire — when the intro is over. */
+  lastDelay: number
+}
 
 /* ---------------------------------------------------------------------------
    Board construction
@@ -124,22 +133,19 @@ function buildBoard(lines: Array<string>): Board {
   })
 
   const dots: Array<Dot> = []
+  let lastDelay = 0
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
       const seed = hash(col * 31.7 + row * 71.3)
-      dots.push({
-        col,
-        row,
-        lit: isLit[row][col],
-        seed,
-        // A scan across the board, softened by row and a little per-dot jitter
-        // so the leading edge isn't a hard vertical line.
-        delay: (col / cols) * 0.62 + (row / rows) * 0.08 + seed * 0.05,
-      })
+      // A scan across the board, softened by row and a little per-dot jitter
+      // so the leading edge isn't a hard vertical line.
+      const delay = (col / cols) * 0.62 + (row / rows) * 0.08 + seed * 0.05
+      if (delay > lastDelay) lastDelay = delay
+      dots.push({ col, row, lit: isLit[row][col], seed, delay })
     }
   }
 
-  return { cols, rows, dots }
+  return { cols, rows, dots, lastDelay }
 }
 
 /* ---------------------------------------------------------------------------
@@ -225,6 +231,10 @@ export function NameMatrix({
     // The hotspot reads as the same phosphor driven harder, not a new hue.
     const ACID_HOT = mix(ACID, [255, 255, 255], 0.38)
 
+    // The ramp and the overshoot both have to finish, otherwise parking the
+    // loop would freeze a dot mid-flash.
+    const introEnd = Math.max(wide.lastDelay, stacked.lastDelay) + 0.3 + 2
+
     let board = wide
     let pitch = minPitch
     let width = 0
@@ -234,7 +244,7 @@ export function NameMatrix({
     const pointer = { x: -1e4, y: -1e4, over: 0, target: 0 }
     let start = performance.now()
     let raf = 0
-    let settled = false
+    let running = false
 
     function measure() {
       const available = host!.clientWidth
@@ -256,34 +266,28 @@ export function NameMatrix({
       canvas!.style.width = `${width}px`
       canvas!.style.height = `${height}px`
       ctx!.setTransform(dpr, 0, 0, dpr, 0, 0)
-      settled = false
     }
 
     function draw(now: number) {
       const t = (now - start) / 1000
+      const igniting = !reduced && t < introEnd
 
       // Ease the hover factor rather than snapping, so leaving the board
       // drains the green instead of cutting it.
       pointer.over += (pointer.target - pointer.over) * (reduced ? 0.4 : 0.11)
-
-      // Nothing is animating and nothing is hovered: hold the last frame.
-      const idle =
-        reduced && Math.abs(pointer.target - pointer.over) < 0.002 && settled
-      if (idle) {
-        raf = requestAnimationFrame(draw)
-        return
-      }
+      const hovering = pointer.target > 0 || pointer.over > 0.003
+      // Settle the last of the easing rather than leaving a trace of green on
+      // the resting frame.
+      if (!hovering) pointer.over = 0
 
       ctx!.clearRect(0, 0, width, height)
 
       const half = pitch / 2
       const litRadius = pitch * 0.34
       const darkRadius = pitch * 0.15
-      const hotRadius = pitch * 9
-
-      // A single highlight crossing the board every ~6s. Runs off both edges so
-      // there's a rest between passes.
-      const sweepHead = ((t * 0.17) % 1) * (board.cols + 30) - 15
+      // Small enough to sit inside the height of the board, so the pool reads
+      // as a circle rather than as a band across the full stave.
+      const hotRadius = pitch * 3.4
 
       for (const dot of board.dots) {
         const cx = dot.col * pitch + half
@@ -298,10 +302,9 @@ export function NameMatrix({
           const dy = cy - pointer.y
           const dist = Math.hypot(dx, dy)
           if (dist < hotRadius) {
-            // Smoothstep with a saturated core: the pool is solidly green in
-            // the middle and fades out at the edge, rather than being a faint
-            // gradient the whole way.
-            const u = clamp01(((hotRadius - dist) / hotRadius) * 1.35)
+            // Smoothstep with a small saturated core, so the pool is solid in
+            // the middle and its edge stays a clean circle.
+            const u = clamp01(((hotRadius - dist) / hotRadius) * 1.15)
             local = pointer.over * u * u * (3 - 2 * u)
             if (!reduced && dist > 0.001) {
               // A nudge, not a shove — enough that the board acknowledges the
@@ -337,7 +340,10 @@ export function NameMatrix({
         let brightness = eased
         let radius = litRadius
 
-        if (!reduced) {
+        // Ignition is the only motion the board makes on its own, and it ends.
+        // Once it's over the resting frame is exact, so there's nothing left to
+        // shimmer or drift.
+        if (igniting) {
           // Overshoot as each dot fires, decaying into the resting level.
           const flash = Math.exp(-Math.max(0, t - dot.delay - 0.3) / 0.4)
           brightness *= 1 + 0.95 * flash * eased
@@ -345,13 +351,6 @@ export function NameMatrix({
           if (ignite < 1) {
             // Warm-up stutter, only while the dot is still coming up.
             brightness *= 0.5 + 0.5 * hash(dot.seed * 97 + Math.floor(t * 26))
-          } else {
-            const sweep = Math.exp(-(((dot.col - sweepHead) / 6) ** 2))
-            brightness *= 1 + 0.3 * sweep
-
-            const wave = Math.sin(dot.col * 0.28 - t * 1.4 + dot.row * 0.18)
-            brightness *= 1 + 0.05 * wave
-            py += wave * pitch * 0.055
           }
         }
 
@@ -376,7 +375,19 @@ export function NameMatrix({
         ctx!.fill()
       }
 
-      if (reduced) settled = true
+      // The frame just drawn is the board at rest: stop scheduling until
+      // something actually changes.
+      if (igniting || hovering) {
+        raf = requestAnimationFrame(draw)
+      } else {
+        running = false
+      }
+    }
+
+    /** Restart the loop after it has parked. */
+    function wake() {
+      if (running) return
+      running = true
       raf = requestAnimationFrame(draw)
     }
 
@@ -385,26 +396,29 @@ export function NameMatrix({
       pointer.x = event.clientX - rect.left
       pointer.y = event.clientY - rect.top
       pointer.target = 1
-      settled = false
+      wake()
     }
 
     function onPointerLeave() {
       pointer.target = 0
-      settled = false
+      wake()
     }
 
     function onMotionChange(event: MediaQueryListEvent) {
       reduced = event.matches
-      settled = false
       start = performance.now()
+      wake()
     }
 
-    const resizeObserver = new ResizeObserver(() => measure())
+    const resizeObserver = new ResizeObserver(() => {
+      measure()
+      wake()
+    })
     resizeObserver.observe(host)
 
     measure()
     start = performance.now()
-    raf = requestAnimationFrame(draw)
+    wake()
 
     canvas.addEventListener('pointermove', onPointerMove)
     canvas.addEventListener('pointerenter', onPointerMove)
