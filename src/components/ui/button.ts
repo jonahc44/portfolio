@@ -4,8 +4,8 @@ import { cn } from '#/lib/cn'
  * Three tiers. Fills are flat ink on a square field — screen-printed panel
  * labels, not glossy chrome.
  *
- *   acid — the ONE primary action on a view (green fill, ground-dark label)
- *   bone — secondary (off-white fill, ground-dark label)
+ *   acid — the ONE primary action on a view (accent fill, ground label)
+ *   bone — secondary (ink fill, ground label)
  *   line — tertiary (transparent, hairline border)
  *
  * Note that `line` brightens to bone on hover rather than to an accent: hover
@@ -24,7 +24,7 @@ const sizes: Record<ButtonSize, string> = {
 
 const variants: Record<ButtonVariant, string> = {
   acid: 'bg-acid text-ground hover:bg-acid-2',
-  bone: 'bg-bone text-ground hover:bg-white',
+  bone: 'bg-bone text-ground hover:bg-bone-2',
   line: 'border border-line text-bone-dim hover:border-line-2 hover:text-bone',
 }
 

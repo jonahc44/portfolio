@@ -17,6 +17,13 @@
           orange — the readout layer: eyebrows, indices, advisory status
 
    No glow, no bloom, no gradients, no rounded corners. Rectilinear and flat.
+
+   Light and dark are one palette with two sets of values, not two designs.
+   Every token below keeps its *role* in both schemes and only changes its
+   value, so components never branch on scheme — `text-bone` is "the ink" in
+   both, `bg-ground` is "the page" in both. The dark values are the default and
+   the light values override them in @layer base; see the light block for how
+   the two accents swap duty.
 --------------------------------------------------------------------------- */
 @theme {
   /* Type */
@@ -35,8 +42,10 @@
   --color-line-2: #57574f;
 
   /* Bone — panel fills and text. Warm off-white, closer to printed card than
-     to screen white. */
+     to screen white. `bone-2` is one step further from the ground than bone:
+     the hover state of a bone fill, and the only pure value in the palette. */
   --color-bone: #e6e4df;
+  --color-bone-2: #ffffff;
   --color-bone-dim: #a3a19a;
   --color-bone-faint: #7a786f;
 
@@ -79,8 +88,72 @@
     box-sizing: border-box;
   }
 
+  :root {
+    /* Not a @theme token because nothing should be able to say `bg-drive`:
+       it exists only for the dot-matrix canvas, which mixes toward it to draw
+       a dot that is being driven past full. "Past full" means away from the
+       ground — blown out on a dark board, saturated ink on a light one. */
+    --drive: #ffffff;
+  }
+
+  /* -------------------------------------------------------------------------
+     Light
+
+     The same panel under work light instead of in a dark room. Ground and ink
+     invert around the grey scale, holding the contrast ratios the dark scheme
+     already sets, and the accents swap duty:
+
+       dark   acid green is the primary  ·  hazard orange is the readout
+       light  burnt orange is the primary ·  deep phosphor is the readout
+
+     Both hues survive the change of scheme; only which one carries the primary
+     action moves. The reason is physical rather than decorative — a bright
+     accent reads as lit against a dark ground, and as washed-out against paper.
+     On paper the accent has to be the *darker*, more saturated ink, and of the
+     two, orange is the one that stays itself when it goes deep. Green goes
+     olive, which is exactly the right register for a quiet readout label.
+  ------------------------------------------------------------------------- */
+  @media (prefers-color-scheme: light) {
+    :root {
+      /* Warm paper, deliberately toned rather than white — the same refusal of
+         the pure value that keeps the dark ground off black. Being a step down
+         from white also leaves the surfaces somewhere to lift *to*: every
+         value below is tuned to hold the exact contrast ratio its dark
+         counterpart has against the dark ground, so the two schemes separate
+         by the same amount and only the direction of the lift changes. */
+      --color-ground: #e4e1d8;
+      --color-surface: #edebe5;
+      --color-surface-2: #f9f8f4;
+
+      --color-line: #bcb7aa;
+      --color-line-2: #989285;
+
+      /* Ink. Warm near-black, never pure — printed card, not laser toner. */
+      --color-bone: #181815;
+      --color-bone-2: #000000;
+      --color-bone-dim: #4d4b43;
+      --color-bone-faint: #716e65;
+
+      /* Burnt orange, taken deep enough to work as ink: 4.75:1 on the ground,
+         and the same again for ground-coloured text sitting on a fill of it. */
+      --color-acid: #a83f06;
+      --color-acid-2: #8f3706;
+      --color-acid-deep: #f2d4bb;
+
+      /* Deep phosphor. The readout layer, at the value ink wants on paper. */
+      --color-orange: #4f6b0e;
+      --color-orange-2: #405709;
+      --color-orange-deep: #e2e8c4;
+
+      --drive: #000000;
+    }
+  }
+
   html {
-    color-scheme: dark;
+    /* Both, so form controls and the UA scrollbar follow the scheme too. Light
+       is listed first because a browser reporting no preference resolves
+       `prefers-color-scheme` to light, and the two must not disagree. */
+    color-scheme: light dark;
     scroll-behavior: smooth;
     -webkit-tap-highlight-color: transparent;
   }

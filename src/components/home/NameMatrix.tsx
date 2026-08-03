@@ -11,10 +11,13 @@ import { cn } from '#/lib/cn'
 
      ignition  a left-to-right scan on load, each dot flashing bright before it
                settles — a tube warming up, not a fade-in
-     pointer   a pool of acid green follows the cursor — only the dots inside
+     pointer   a pool of the accent follows the cursor — only the dots inside
                it change, and only in colour and brightness; nothing is ever
                displaced, so the name reads the same whether or not the cursor
                is on it
+
+   Every colour is read off the document rather than written here, so the board
+   is drawn in the page's own ink and follows the colour scheme with it.
 
    Between the two the board is completely still: no ambient shimmer, no drift,
    and the render loop parks itself rather than repainting an identical frame.
@@ -176,16 +179,52 @@ function rgba([r, g, b]: RGB, alpha: number): string {
   return `rgba(${Math.round(r)},${Math.round(g)},${Math.round(b)},${alpha.toFixed(3)})`
 }
 
-/** Read a design token off the document so the canvas can't drift from CSS. */
+/**
+ * Read a design token off the document so the canvas can't drift from CSS.
+ *
+ * Both hex forms are accepted: the build minifies custom properties, so a token
+ * authored as #ffffff arrives as #fff in production.
+ */
 function token(name: string, fallback: RGB): RGB {
   if (typeof window === 'undefined') return fallback
   const raw = getComputedStyle(document.documentElement)
     .getPropertyValue(name)
     .trim()
-  const m = /^#([0-9a-f]{6})$/i.exec(raw)
+  const m = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(raw)
   if (!m) return fallback
-  const int = parseInt(m[1], 16)
+  const hex =
+    m[1].length === 3
+      ? m[1].replace(/./g, (c) => c + c)
+      : m[1]
+  const int = parseInt(hex, 16)
   return [(int >> 16) & 255, (int >> 8) & 255, int & 255]
+}
+
+type Palette = {
+  /** Lit dots at rest. */
+  bone: RGB
+  /** Unlit cells — the substrate the dots are mounted in. */
+  line: RGB
+  /** The pointer pool. */
+  acid: RGB
+  /** The core of the pool: the same accent driven harder. */
+  acidHot: RGB
+}
+
+/**
+ * Snapshot the palette from CSS. Re-read on a scheme change: the fallbacks are
+ * the dark values, used only before the document can be measured.
+ */
+function readPalette(): Palette {
+  const acid = token('--color-acid', [184, 224, 25])
+  return {
+    bone: token('--color-bone', [230, 228, 223]),
+    line: token('--color-line', [59, 59, 54]),
+    acid,
+    // Driven past full means driven *away from the ground* — blown out on a
+    // dark board, saturated into the paper on a light one. Never a new hue.
+    acidHot: mix(acid, token('--drive', [255, 255, 255]), 0.38),
+  }
 }
 
 /* ---------------------------------------------------------------------------
@@ -226,11 +265,8 @@ export function NameMatrix({
     const wide = buildBoard([words.join(' ')])
     const stacked = buildBoard(words)
 
-    const BONE = token('--color-bone', [230, 228, 223])
-    const LINE = token('--color-line', [59, 59, 54])
-    const ACID = token('--color-acid', [184, 224, 25])
-    // The hotspot reads as the same phosphor driven harder, not a new hue.
-    const ACID_HOT = mix(ACID, [255, 255, 255], 0.38)
+    const schemeQuery = window.matchMedia('(prefers-color-scheme: dark)')
+    let palette = readPalette()
 
     // The ramp and the overshoot both have to finish, otherwise parking the
     // loop would freeze a dot mid-flash.
@@ -270,6 +306,7 @@ export function NameMatrix({
     }
 
     function draw(now: number) {
+      const { bone, line, acid, acidHot } = palette
       const t = (now - start) / 1000
       const igniting = !reduced && t < introEnd
 
@@ -317,7 +354,7 @@ export function NameMatrix({
         if (!dot.lit) {
           // Unlit cells: the substrate. Barely there until the pointer is near.
           const alpha = eased * (0.13 + 0.62 * local)
-          ctx!.fillStyle = rgba(mix(LINE, ACID, clamp01(local * 0.9)), alpha)
+          ctx!.fillStyle = rgba(mix(line, acid, clamp01(local * 0.9)), alpha)
           ctx!.beginPath()
           ctx!.arc(cx, cy, darkRadius * (1 + local * 0.7), 0, Math.PI * 2)
           ctx!.fill()
@@ -343,14 +380,13 @@ export function NameMatrix({
 
         brightness *= 1 + 0.55 * local
 
-        // The green is strictly local: dots outside the pool stay bone, so the
+        // The accent is strictly local: dots outside the pool stay bone, so the
         // pointer reads as a light being carried across the board.
-        let color = BONE
+        let color = bone
         if (local > 0) {
-          color = mix(BONE, ACID, clamp01(local))
-          // The core of the pool is the same phosphor driven harder.
+          color = mix(bone, acid, clamp01(local))
           const core = clamp01((local - 0.65) / 0.35)
-          if (core > 0) color = mix(color, ACID_HOT, core * 0.55)
+          if (core > 0) color = mix(color, acidHot, core * 0.55)
         }
 
         // Past full brightness the dot grows rather than clipping to white.
@@ -397,6 +433,13 @@ export function NameMatrix({
       wake()
     }
 
+    /** The scheme flipped under us: repaint in the new ink, without replaying
+     *  the intro — the board is already warm. */
+    function onSchemeChange() {
+      palette = readPalette()
+      wake()
+    }
+
     const resizeObserver = new ResizeObserver(() => {
       measure()
       wake()
@@ -412,6 +455,7 @@ export function NameMatrix({
     canvas.addEventListener('pointerleave', onPointerLeave)
     canvas.addEventListener('pointercancel', onPointerLeave)
     motionQuery.addEventListener('change', onMotionChange)
+    schemeQuery.addEventListener('change', onSchemeChange)
 
     return () => {
       cancelAnimationFrame(raf)
@@ -421,6 +465,7 @@ export function NameMatrix({
       canvas.removeEventListener('pointerleave', onPointerLeave)
       canvas.removeEventListener('pointercancel', onPointerLeave)
       motionQuery.removeEventListener('change', onMotionChange)
+      schemeQuery.removeEventListener('change', onSchemeChange)
     }
   }, [text, minPitch, maxPitch])
 
