@@ -14,16 +14,19 @@ const linkBase =
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-ground">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-5 sm:px-8">
-        <Link to="/" className="group flex items-center gap-2.5">
+      {/* Three tracks, not `justify-between`: the empty right track is what
+          holds the nav on the bar's true centre line, independent of how wide
+          the wordmark happens to be. */}
+      <div className="mx-auto grid h-16 max-w-6xl grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-4 px-5 sm:px-8">
+        <Link to="/" className="group flex min-w-0 items-center gap-2.5 justify-self-start">
           <span
             aria-hidden
-            className="grid size-6 place-items-center bg-acid font-display text-xs font-bold text-ground"
+            className="grid size-6 shrink-0 place-items-center bg-acid font-display text-xs font-bold text-ground"
           >
-            J
+            JC
           </span>
-          <span className="display-wide text-sm font-semibold transition-colors group-hover:text-bone">
-            {profile.handle}
+          <span className="display-wide truncate text-sm font-semibold transition-colors group-hover:text-bone">
+            {profile.name}
           </span>
         </Link>
 
@@ -45,14 +48,6 @@ export function SiteHeader() {
             ))}
           </ul>
         </nav>
-
-        {/* Availability readout, not a badge — orange label, no fill, no pulse. */}
-        {profile.openToWork ? (
-          <p className="label-micro hidden items-center gap-2 text-orange lg:flex">
-            <span aria-hidden className="size-1.5 bg-orange" />
-            Open to work
-          </p>
-        ) : null}
       </div>
     </header>
   )

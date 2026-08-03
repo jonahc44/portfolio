@@ -40,10 +40,12 @@
   --color-bone-dim: #a3a19a;
   --color-bone-faint: #7a786f;
 
-  /* Green phosphor. Affirmative state + the one primary action per view. */
-  --color-acid: #a0c516;
-  --color-acid-2: #8aab12; /* hover / pressed */
-  --color-acid-deep: #3f4a12; /* low-emphasis fills and rules */
+  /* Green phosphor. Affirmative state + the one primary action per view.
+     One hue (~72°) stepped down in lightness — the ramp is the same ink at
+     three intensities, never a second green. */
+  --color-acid: #b8e019;
+  --color-acid-2: #a2c516; /* hover / pressed */
+  --color-acid-deep: #4f5c16; /* low-emphasis fills and rules */
 
   /* Hazard orange. The labelling layer — never an action. Bright enough that
      it must stay rare and small: mono labels only, never a paragraph or a fill
