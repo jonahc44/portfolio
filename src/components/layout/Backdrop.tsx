@@ -1,27 +1,15 @@
 /**
- * Ambient ground. Deliberately almost nothing: a faint neutral lift at the top
- * and a whisper of grid for structure. No colour, no motion, no texture — the
- * accent has to stay rare to keep its weight.
+ * Ambient ground: a single soft lift toward the top of the page and nothing
+ * else. No grid, no texture, no motion — on a grey ground the panel edges are
+ * already doing the structural work, and anything more reads as noise.
  */
 export function Backdrop() {
   return (
     <div
       aria-hidden
-      className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-base"
+      className="pointer-events-none fixed inset-0 -z-10 bg-ground"
     >
-      <div
-        className="absolute inset-0 opacity-[0.035]"
-        style={{
-          backgroundImage:
-            'linear-gradient(to right, #fff 1px, transparent 1px), linear-gradient(to bottom, #fff 1px, transparent 1px)',
-          backgroundSize: '80px 80px',
-          maskImage:
-            'radial-gradient(ellipse 80% 55% at 50% 0%, #000 20%, transparent 80%)',
-          WebkitMaskImage:
-            'radial-gradient(ellipse 80% 55% at 50% 0%, #000 20%, transparent 80%)',
-        }}
-      />
-      <div className="absolute inset-x-0 top-0 h-[32rem] bg-gradient-to-b from-surface/70 to-transparent" />
+      <div className="absolute inset-x-0 top-0 h-[36rem] bg-gradient-to-b from-surface/60 to-transparent" />
     </div>
   )
 }

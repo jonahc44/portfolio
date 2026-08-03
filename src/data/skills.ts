@@ -1,5 +1,5 @@
 /**
- * Skills, grouped for the about page and the home page marquee.
+ * Skills, grouped for the about page.
  * PLACEHOLDER: trim this to what you'd actually be comfortable defending in an
  * interview — a short honest list reads better than a long one.
  */
@@ -27,8 +27,3 @@ export const skillGroups: Array<SkillGroup> = [
     items: ['Rust', 'Distributed systems', 'WebGL'],
   },
 ]
-
-/** Flat list used by the scrolling ticker on the home page. */
-export const skillTicker = skillGroups
-  .filter((g) => g.title !== 'Currently learning')
-  .flatMap((g) => g.items)

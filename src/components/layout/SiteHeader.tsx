@@ -9,21 +9,24 @@ const navItems = [
 ] as const
 
 const linkBase =
-  'display-wide rounded-md px-3 py-1.5 text-xs font-semibold text-bone-dim transition-colors duration-150 ease-ui hover:text-bone'
+  'display-wide px-3 py-1.5 text-xs font-semibold text-bone-dim transition-colors duration-150 ease-ui hover:text-bone'
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-50 border-b border-line bg-base/85 backdrop-blur-sm">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-5 sm:px-8">
-        <Link to="/" className="group flex items-center gap-2.5">
+    <header className="sticky top-0 z-50 border-b border-line bg-ground">
+      {/* Three tracks, not `justify-between`: the empty right track is what
+          holds the nav on the bar's true centre line, independent of how wide
+          the wordmark happens to be. */}
+      <div className="mx-auto grid h-16 max-w-6xl grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-4 px-5 sm:px-8">
+        <Link to="/" className="group flex min-w-0 items-center gap-2.5 justify-self-start">
           <span
             aria-hidden
-            className="fill-acid grid size-6 place-items-center rounded font-display text-xs font-bold text-black"
+            className="grid size-6 shrink-0 place-items-center bg-acid font-display text-xs font-bold text-ground"
           >
-            J
+            JC
           </span>
-          <span className="display-wide text-sm font-semibold transition-colors group-hover:text-acid">
-            {profile.handle}
+          <span className="display-wide truncate text-sm font-semibold transition-colors group-hover:text-bone">
+            {profile.name}
           </span>
         </Link>
 
@@ -36,7 +39,7 @@ export function SiteHeader() {
                   activeOptions={{ exact: item.to === '/' }}
                   className={linkBase}
                   activeProps={{
-                    className: 'fill-acid text-black! hover:text-black',
+                    className: 'bg-acid text-ground! hover:text-ground',
                   }}
                 >
                   {item.label}
@@ -45,14 +48,6 @@ export function SiteHeader() {
             ))}
           </ul>
         </nav>
-
-        {/* Status chip, after the small badges in the reference's header. */}
-        {profile.openToWork ? (
-          <div className="label-mono hidden items-center gap-1.5 rounded-full border border-acid/40 px-2.5 py-1 text-acid lg:flex">
-            <span aria-hidden className="animate-breathe size-1.5 rounded-full bg-acid" />
-            Open to work
-          </div>
-        ) : null}
       </div>
     </header>
   )

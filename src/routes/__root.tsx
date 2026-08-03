@@ -4,7 +4,6 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 
 import { Backdrop } from '#/components/layout/Backdrop'
-import { ViewportFrame } from '#/components/layout/ViewportFrame'
 import { SiteHeader } from '#/components/layout/SiteHeader'
 import { SiteFooter } from '#/components/layout/SiteFooter'
 import { buttonClass } from '#/components/ui/button'
@@ -20,7 +19,6 @@ function RootComponent() {
   return (
     <div className="flex min-h-screen flex-col">
       <Backdrop />
-      <ViewportFrame />
 
       <a
         href="#main"
@@ -59,7 +57,7 @@ function RootComponent() {
 function NotFound() {
   return (
     <div className="mx-auto grid max-w-6xl place-items-center px-5 py-32 text-center sm:px-8">
-      <p className="label-mono mb-5 text-acid">Error / 404</p>
+      <p className="label-mono mb-5 text-orange">Error / 404</p>
       <h1 className="display-wide text-6xl font-semibold sm:text-8xl">404</h1>
       <p className="mt-5 max-w-md text-bone-dim">
         This route doesn&apos;t resolve. The page was moved, deleted, or never

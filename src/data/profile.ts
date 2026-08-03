@@ -10,8 +10,7 @@ export type Social = {
 }
 
 export const profile = {
-  /** TODO: add your surname if you want the full name displayed. */
-  name: 'Jonah',
+  name: 'Jonah Cohen',
   handle: 'jonahc44',
   /** Shown under the hero name, in order. */
   roles: ['Software Engineer', 'Computer Science Student'],

@@ -33,7 +33,7 @@ function ProjectsPage() {
               type="button"
               onClick={() => setFilter(tag)}
               aria-pressed={filter === tag}
-              className="cursor-pointer rounded-full"
+              className="cursor-pointer"
             >
               <Tag active={filter === tag}>{tag}</Tag>
             </button>

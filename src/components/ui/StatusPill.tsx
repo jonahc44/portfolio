@@ -3,13 +3,19 @@ import { statusLabels } from '#/data/projects'
 import { cn } from '#/lib/cn'
 
 /**
- * Single-accent discipline: only a live project earns the acid colour. The rest
- * separate by grey value alone.
+ * The two accents split by meaning: green is the affirmative state, orange is
+ * advisory. Anything neither of those separates by grey value alone.
  */
-const statusStyles: Record<ProjectStatus, { dot: string; text: string }> = {
-  live: { dot: 'bg-acid', text: 'text-acid' },
-  wip: { dot: 'bg-bone-dim', text: 'text-bone-dim' },
-  archived: { dot: 'bg-bone-faint', text: 'text-bone-faint' },
+const statusStyles: Record<ProjectStatus, string> = {
+  live: 'text-acid',
+  wip: 'text-orange',
+  archived: 'text-bone-faint',
+}
+
+const statusDots: Record<ProjectStatus, string> = {
+  live: 'bg-acid',
+  wip: 'bg-orange',
+  archived: 'bg-bone-faint',
 }
 
 type StatusPillProps = {
@@ -18,24 +24,15 @@ type StatusPillProps = {
 }
 
 export function StatusPill({ status, className }: StatusPillProps) {
-  const style = statusStyles[status]
-
   return (
     <span
       className={cn(
         'label-mono inline-flex items-center gap-1.5',
-        style.text,
+        statusStyles[status],
         className,
       )}
     >
-      <span
-        aria-hidden
-        className={cn(
-          'size-1.5 rounded-full',
-          style.dot,
-          status === 'live' && 'animate-breathe',
-        )}
-      />
+      <span aria-hidden className={cn('size-1.5', statusDots[status])} />
       {statusLabels[status]}
     </span>
   )
