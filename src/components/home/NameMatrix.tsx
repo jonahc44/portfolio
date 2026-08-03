@@ -12,8 +12,9 @@ import { cn } from '#/lib/cn'
      ignition  a left-to-right scan on load, each dot flashing bright before it
                settles — a tube warming up, not a fade-in
      pointer   a pool of acid green follows the cursor — only the dots inside
-               it change colour, and they move barely at all, so the name stays
-               readable while you sweep across it
+               it change, and only in colour and brightness; nothing is ever
+               displaced, so the name reads the same whether or not the cursor
+               is on it
 
    Between the two the board is completely still: no ambient shimmer, no drift,
    and the render loop parks itself rather than repainting an identical frame.
@@ -294,25 +295,17 @@ export function NameMatrix({
         const cy = dot.row * pitch + half
 
         // --- pointer influence -------------------------------------------
+        // Dots never leave their cell. The pointer changes what a dot looks
+        // like, not where it is, so the letterforms are identical whether or
+        // not the cursor is on them.
         let local = 0
-        let px = 0
-        let py = 0
         if (pointer.over > 0.001) {
-          const dx = cx - pointer.x
-          const dy = cy - pointer.y
-          const dist = Math.hypot(dx, dy)
+          const dist = Math.hypot(cx - pointer.x, cy - pointer.y)
           if (dist < hotRadius) {
             // Smoothstep with a small saturated core, so the pool is solid in
             // the middle and its edge stays a clean circle.
             const u = clamp01(((hotRadius - dist) / hotRadius) * 1.15)
             local = pointer.over * u * u * (3 - 2 * u)
-            if (!reduced && dist > 0.001) {
-              // A nudge, not a shove — enough that the board acknowledges the
-              // cursor, small enough that the letterforms stay readable.
-              const push = local * pitch * 0.12
-              px = (dx / dist) * push
-              py = (dy / dist) * push
-            }
           }
         }
 
@@ -326,13 +319,7 @@ export function NameMatrix({
           const alpha = eased * (0.13 + 0.62 * local)
           ctx!.fillStyle = rgba(mix(LINE, ACID, clamp01(local * 0.9)), alpha)
           ctx!.beginPath()
-          ctx!.arc(
-            cx + px,
-            cy + py,
-            darkRadius * (1 + local * 0.7),
-            0,
-            Math.PI * 2,
-          )
+          ctx!.arc(cx, cy, darkRadius * (1 + local * 0.7), 0, Math.PI * 2)
           ctx!.fill()
           continue
         }
@@ -371,7 +358,7 @@ export function NameMatrix({
 
         ctx!.fillStyle = rgba(color, clamp01(brightness))
         ctx!.beginPath()
-        ctx!.arc(cx + px, cy + py, radius, 0, Math.PI * 2)
+        ctx!.arc(cx, cy, radius, 0, Math.PI * 2)
         ctx!.fill()
       }
 
