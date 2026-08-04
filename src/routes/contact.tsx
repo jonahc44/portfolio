@@ -27,7 +27,7 @@ function ContactPage() {
           <div>
             <a
               href={`mailto:${profile.email}`}
-              className="display-wide text-xl font-semibold break-all underline decoration-line-2 underline-offset-8 transition-colors hover:decoration-acid sm:text-2xl"
+              className="display-wide text-xl font-semibold break-all underline decoration-line-2 underline-offset-8 transition-colors hover:decoration-acid-ink sm:text-2xl"
             >
               {profile.email}
             </a>

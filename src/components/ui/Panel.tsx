@@ -17,7 +17,7 @@ type PanelProps = {
 
 const accents: Record<PanelAccent, string> = {
   line: 'border-line group-hover:border-line-2',
-  acid: 'border-acid/40 group-hover:border-acid',
+  acid: 'border-acid-ink/40 group-hover:border-acid-ink',
 }
 
 /**
@@ -45,7 +45,7 @@ export function Panel({
           <span
             className={cn(
               'label-mono',
-              accent === 'acid' ? 'text-acid' : 'text-bone-faint',
+              accent === 'acid' ? 'text-acid-ink' : 'text-bone-faint',
             )}
           >
             {title}

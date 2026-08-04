@@ -7,7 +7,7 @@ import { cn } from '#/lib/cn'
  * advisory. Anything neither of those separates by grey value alone.
  */
 const statusStyles: Record<ProjectStatus, string> = {
-  live: 'text-acid',
+  live: 'text-acid-ink',
   wip: 'text-orange',
   archived: 'text-bone-faint',
 }

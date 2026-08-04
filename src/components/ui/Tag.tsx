@@ -15,7 +15,7 @@ export function Tag({ children, active = false, className }: TagProps) {
       className={cn(
         'label-mono inline-block border px-2.5 py-1 transition-colors duration-150 ease-ui',
         active
-          ? 'border-acid bg-acid text-ground'
+          ? 'border-acid bg-acid text-on-accent'
           : 'border-line bg-surface-2 text-bone-dim',
         className,
       )}

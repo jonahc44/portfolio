@@ -18,7 +18,7 @@ export function SiteHeader() {
         <Link to="/" className="group flex min-w-0 items-center gap-2.5 justify-self-start">
           <span
             aria-hidden
-            className="grid size-6 shrink-0 place-items-center bg-acid font-display text-xs font-bold text-ground"
+            className="grid size-6 shrink-0 place-items-center bg-acid font-display text-xs font-bold text-on-accent"
           >
             JC
           </span>
@@ -36,7 +36,7 @@ export function SiteHeader() {
                   activeOptions={{ exact: item.to === '/' }}
                   className={linkBase}
                   activeProps={{
-                    className: 'bg-acid text-ground! hover:text-ground',
+                    className: 'bg-acid text-on-accent! hover:text-on-accent',
                   }}
                 >
                   {item.label}

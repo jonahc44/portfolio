@@ -49,10 +49,24 @@
   --color-bone-dim: #a3a19a;
   --color-bone-faint: #7a786f;
 
-  /* Green phosphor. Affirmative state + the one primary action per view. */
+  /* Green phosphor. Affirmative state + the one primary action per view.
+
+     The accent has two jobs, and on a dark ground one colour does both: the
+     same green works as a fill and as ink on the ground. On a light ground it
+     cannot — a fill wants to be bright and ink wants to be dark — so the two
+     jobs are separate tokens. Here they hold the same value; see the light
+     block, where they diverge.
+
+       acid      the accent as a FILL, always under an `on-accent` label
+       acid-ink  the accent as INK on the ground: text, rules, underlines */
   --color-acid: #b8e019;
   --color-acid-2: #a2c516; /* hover / pressed */
+  --color-acid-ink: #b8e019;
   --color-acid-deep: #4f5c16; /* low-emphasis fills and rules */
+
+  /* The label that sits on an accent fill. Dark in both schemes — a fill is
+     bright in both, so what reads on it is ink, never the ground. */
+  --color-on-accent: #1b1b19;
 
   /* Hazard orange. The labelling layer — never an action. Bright enough that
      it must stay rare and small: mono labels only, never a paragraph or a fill
@@ -134,17 +148,28 @@
       --color-bone-dim: #4d4b43;
       --color-bone-faint: #716e65;
 
-      /* Burnt orange, taken deep enough to work as ink: 4.5:1 on the ground,
-         and the same again for ground-coloured text sitting on a fill of it.
+      /* Here the accent's two jobs split, because on paper no single orange
+         does both. A fill has to be bright or it reads as a brown block; ink
+         has to be dark or it is unreadable. So:
 
-         Sitting a few degrees red of the dark scheme's orange is what buys the
-         brightness. Green carries most of perceived luminance and red carries
-         little, so at a fixed contrast budget a slightly redder orange can be
-         a visibly stronger colour — this is ~10% brighter than the same hue
-         would allow, and fully saturated rather than muddied with blue. */
-      --color-acid: #b73700;
-      --color-acid-2: #a03001;
+           acid      the brand orange itself, at full strength, as a fill —
+                     the ink label on it lands at 6.3:1, better than the cream
+                     label it replaces managed at 4.5:1
+           acid-ink  the same orange taken deep, for text and rules on the
+                     ground, at 4.5:1
+
+         The cost is bounded and deliberate: a bright fill on warm paper
+         separates from the page by 2.2:1, under the 3:1 that WCAG 1.4.11 asks
+         of a component boundary. Every piece of *text* stays above 4.5:1, and
+         these fills are labelled buttons and chips rather than bare swatches,
+         so nothing depends on the boundary alone to be found. */
+      --color-acid: #fc6f1e;
+      --color-acid-2: #e05c11;
+      --color-acid-ink: #b73700;
       --color-acid-deep: #f2d4bb;
+
+      /* Ink, as in dark — the fill is bright in both schemes. */
+      --color-on-accent: #181815;
 
       /* Deep phosphor. The readout layer, at the value ink wants on paper. */
       --color-orange: #4f6b0e;
