@@ -134,10 +134,16 @@
       --color-bone-dim: #4d4b43;
       --color-bone-faint: #716e65;
 
-      /* Burnt orange, taken deep enough to work as ink: 4.75:1 on the ground,
-         and the same again for ground-coloured text sitting on a fill of it. */
-      --color-acid: #a83f06;
-      --color-acid-2: #8f3706;
+      /* Burnt orange, taken deep enough to work as ink: 4.5:1 on the ground,
+         and the same again for ground-coloured text sitting on a fill of it.
+
+         Sitting a few degrees red of the dark scheme's orange is what buys the
+         brightness. Green carries most of perceived luminance and red carries
+         little, so at a fixed contrast budget a slightly redder orange can be
+         a visibly stronger colour — this is ~10% brighter than the same hue
+         would allow, and fully saturated rather than muddied with blue. */
+      --color-acid: #b73700;
+      --color-acid-2: #a03001;
       --color-acid-deep: #f2d4bb;
 
       /* Deep phosphor. The readout layer, at the value ink wants on paper. */
