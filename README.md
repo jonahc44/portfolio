@@ -9,6 +9,8 @@ npm run dev        # http://localhost:3000
 npm run build      # -> dist/
 npm run preview
 npm run typecheck
+npm run serve      # firebase hosting emulator -> http://localhost:5000
+npm run deploy     # build + deploy to firebase hosting
 ```
 
 ## Where to edit what
@@ -104,6 +106,33 @@ font-size utility, and the collision is a trap worth avoiding.
   all animations and transitions, so individual components don't need their own
   escape hatch. Keep new animation restrained and decorative — never encode
   meaning in motion alone.
+
+## Deployment
+
+Firebase Hosting, static. Project `jonah-portfolio-a3e75f`, live at
+<https://jonah-portfolio-a3e75f.web.app>.
+
+```bash
+firebase login     # once per machine
+npm run deploy
+```
+
+`firebase.json` covers the two things a Vite SPA needs on a static host:
+
+- **Rewrite** `**` → `/index.html`, so deep links like `/projects` reach the
+  router instead of 404ing.
+- **Cache headers** — `/assets/**` is content-hashed by Vite, so it gets
+  `immutable` for a year; everything else is `no-cache` so a deploy is visible
+  immediately. Both rules match on the *request* path, which is why the broad
+  rule is `**` and not `/index.html` — a request for `/` never literally matches
+  `/index.html`, it only rewrites to it.
+
+There is deliberately **no `predeploy` hook**. The standalone `firebase` CLI
+bundles its own Node and puts it on `PATH`, so `npm`/`npx` invoked from a hook
+run against the wrong runtime. `npm run deploy` sequences the build itself.
+
+Deploys are manual. To take the site down without deleting anything, run
+`firebase hosting:disable`.
 
 ## Notes
 

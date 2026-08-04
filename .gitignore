@@ -12,3 +12,8 @@ dist-ssr
 __unconfig*
 todos.json
 .claude/
+
+# firebase
+.firebase/
+firebase-debug.log
+firebase-debug.*.log
