@@ -131,8 +131,34 @@ There is deliberately **no `predeploy` hook**. The standalone `firebase` CLI
 bundles its own Node and puts it on `PATH`, so `npm`/`npx` invoked from a hook
 run against the wrong runtime. `npm run deploy` sequences the build itself.
 
-Deploys are manual. To take the site down without deleting anything, run
-`firebase hosting:disable`.
+### Automatic deploys
+
+`.github/workflows/deploy.yml` deploys to the live channel on every push to
+`master` (and on manual `workflow_dispatch`). It runs `npm ci` → `typecheck` →
+`build` → deploy, so a type error fails the run instead of shipping. Concurrent
+runs queue rather than cancel — interrupting a deploy mid-upload is worse than
+waiting.
+
+`npm run deploy` still works for deploying straight from your machine.
+
+**One-time setup** — CI needs a service account, which is the only credential
+Firebase Hosting accepts from a non-interactive environment. Easiest path:
+
+```bash
+firebase init hosting:github
+```
+
+It creates the service account, grants it hosting-deploy permission, and writes
+the JSON key into a repo secret for you. Say **no** when it offers to overwrite
+the workflow file. It names the secret after the project
+(`FIREBASE_SERVICE_ACCOUNT_JONAH_PORTFOLIO_A3E75F`); the workflow accepts that
+or a plain `FIREBASE_SERVICE_ACCOUNT`, so either works.
+
+To do it by hand instead: create a service account with the **Firebase Hosting
+Admin** role in the Cloud console, download a JSON key, then
+`gh secret set FIREBASE_SERVICE_ACCOUNT < key.json` and delete the local file.
+
+To take the site down without deleting anything, run `firebase hosting:disable`.
 
 ## Notes
 
