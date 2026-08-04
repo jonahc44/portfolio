@@ -152,19 +152,23 @@
          does both. A fill has to be bright or it reads as a brown block; ink
          has to be dark or it is unreadable. So:
 
-           acid      the brand orange itself, at full strength, as a fill —
-                     the ink label on it lands at 6.3:1, better than the cream
-                     label it replaces managed at 4.5:1
+           acid      the brand orange as a fill, pulled back a step from full
+                     strength — the ink label on it lands at 5.3:1
            acid-ink  the same orange taken deep, for text and rules on the
                      ground, at 4.5:1
 
+         The hover step is shallower here than in the dark scheme. A bright
+         fill carries a dark label, so darkening on hover eats the label's
+         contrast; dark's 25% step would drop it under 4.5:1, and 13% keeps it
+         at 4.7:1 while still reading as a state change.
+
          The cost is bounded and deliberate: a bright fill on warm paper
-         separates from the page by 2.2:1, under the 3:1 that WCAG 1.4.11 asks
+         separates from the page by 2.6:1, under the 3:1 that WCAG 1.4.11 asks
          of a component boundary. Every piece of *text* stays above 4.5:1, and
          these fills are labelled buttons and chips rather than bare swatches,
          so nothing depends on the boundary alone to be found. */
-      --color-acid: #fc6f1e;
-      --color-acid-2: #e05c11;
+      --color-acid: #f35a01;
+      --color-acid-2: #ea4e00;
       --color-acid-ink: #b73700;
       --color-acid-deep: #f2d4bb;
 
