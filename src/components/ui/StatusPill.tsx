@@ -3,18 +3,23 @@ import { statusLabels } from '#/data/projects'
 import { cn } from '#/lib/cn'
 
 /**
- * The two accents split by meaning: green is the affirmative state, orange is
- * advisory. Anything neither of those separates by grey value alone.
+ * Status separates by form and value, not hue. A pill appears on every card in
+ * the work grid, so colouring them scatters accent across the whole page — the
+ * one place the palette can least afford it. Solid/hollow carries the split
+ * between shipped and in-flight, and value carries the drop to archived.
+ *
+ * Nothing is lost by going greyscale: the pill always renders its label, so
+ * the dot was never the only channel.
  */
 const statusStyles: Record<ProjectStatus, string> = {
-  live: 'text-acid-ink',
-  wip: 'text-orange',
+  live: 'text-bone',
+  wip: 'text-bone-dim',
   archived: 'text-bone-faint',
 }
 
 const statusDots: Record<ProjectStatus, string> = {
-  live: 'bg-acid',
-  wip: 'bg-orange',
+  live: 'bg-bone',
+  wip: 'border border-bone-dim',
   archived: 'bg-bone-faint',
 }
 

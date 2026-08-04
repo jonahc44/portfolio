@@ -4,14 +4,20 @@ import { cn } from '#/lib/cn'
  * Three tiers. Fills are flat ink on a square field — screen-printed panel
  * labels, not glossy chrome.
  *
- *   acid — the ONE primary action on a view (accent fill, ink label)
- *   bone — secondary (ink fill, ground label)
- *   line — tertiary (transparent, hairline border)
+ *   primary   — the ONE main action on a view (bone fill, ground label)
+ *   secondary — a supporting action (strong hairline, no fill)
+ *   quiet     — tertiary (faint hairline, dimmed label)
  *
- * Note that `line` brightens to bone on hover rather than to an accent: hover
- * is not a state worth spending the accent on.
+ * All three rest in greyscale and separate by weight alone: filled,
+ * outlined-strong, outlined-faint. The accent is not part of the resting
+ * hierarchy — it only arrives under the pointer, which is why `primary` can
+ * afford to be a plain bone fill and still read as the loudest thing on a page
+ * where nothing else is filled.
+ *
+ * `quiet` brightens to bone rather than to the accent: it is the tier for
+ * things like "return home", where the hover isn't worth a colour.
  */
-export type ButtonVariant = 'acid' | 'bone' | 'line'
+export type ButtonVariant = 'primary' | 'secondary' | 'quiet'
 export type ButtonSize = 'sm' | 'md'
 
 const base =
@@ -23,9 +29,10 @@ const sizes: Record<ButtonSize, string> = {
 }
 
 const variants: Record<ButtonVariant, string> = {
-  acid: 'bg-acid text-on-accent hover:bg-acid-2',
-  bone: 'bg-bone text-ground hover:bg-bone-2',
-  line: 'border border-line text-bone-dim hover:border-line-2 hover:text-bone',
+  primary: 'bg-bone text-ground hover:bg-acid hover:text-on-accent',
+  secondary:
+    'border border-line-2 text-bone hover:border-acid-ink hover:text-acid-ink',
+  quiet: 'border border-line text-bone-dim hover:border-line-2 hover:text-bone',
 }
 
 /**
@@ -34,7 +41,7 @@ const variants: Record<ButtonVariant, string> = {
  * or re-declaring TanStack Router's link generics.
  */
 export function buttonClass(
-  variant: ButtonVariant = 'acid',
+  variant: ButtonVariant = 'primary',
   size: ButtonSize = 'md',
   className?: string,
 ): string {

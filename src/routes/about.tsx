@@ -62,8 +62,10 @@ function AboutPage() {
               <span
                 aria-hidden
                 className={
+                  // Solid vs hollow already carries work vs study; the marker
+                  // never needed a hue to do it.
                   entry.kind === 'work'
-                    ? 'absolute top-2.5 -left-[2.1rem] size-2 bg-orange'
+                    ? 'absolute top-2.5 -left-[2.1rem] size-2 bg-bone-dim'
                     : 'absolute top-2.5 -left-[2.1rem] size-2 border border-bone-faint bg-ground'
                 }
               />

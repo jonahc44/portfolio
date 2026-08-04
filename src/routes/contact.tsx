@@ -20,7 +20,7 @@ function ContactPage() {
     >
       <div className="grid gap-5 md:grid-cols-[1.3fr_1fr]">
         <Panel
-          accent="acid"
+          emphasis="lead"
           title="primary channel"
           className="flex flex-col justify-between gap-8 p-8"
         >
@@ -39,7 +39,7 @@ function ContactPage() {
 
           <a
             href={`mailto:${profile.email}`}
-            className={buttonClass('acid', 'md', 'self-start')}
+            className={buttonClass('primary', 'md', 'self-start')}
           >
             Compose message
           </a>
@@ -53,9 +53,9 @@ function ContactPage() {
                   href={social.href}
                   target={social.href.startsWith('http') ? '_blank' : undefined}
                   rel={social.href.startsWith('http') ? 'noreferrer' : undefined}
-                  className="group/link flex items-baseline justify-between gap-4 border-b border-line pb-3 transition-colors hover:border-line-2"
+                  className="group/link flex items-baseline justify-between gap-4 border-b border-line pb-3 transition-colors hover:border-orange/50"
                 >
-                  <span className="display-wide text-sm font-semibold text-bone-dim transition-colors group-hover/link:text-bone">
+                  <span className="display-wide text-sm font-semibold text-bone-dim transition-colors group-hover/link:text-orange">
                     {social.label}
                   </span>
                   <span className="label-mono truncate text-bone-faint">

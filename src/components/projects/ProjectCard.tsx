@@ -52,7 +52,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
                   href={href}
                   target="_blank"
                   rel="noreferrer"
-                  className="label-mono text-bone-dim transition-colors hover:text-bone"
+                  className="label-mono text-bone-dim transition-colors hover:text-orange"
                 >
                   {linkLabels[key as keyof typeof linkLabels]} ↗
                 </a>

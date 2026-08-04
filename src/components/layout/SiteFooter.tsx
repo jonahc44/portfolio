@@ -18,7 +18,7 @@ export function SiteFooter() {
                 href={social.href}
                 target={social.href.startsWith('http') ? '_blank' : undefined}
                 rel={social.href.startsWith('http') ? 'noreferrer' : undefined}
-                className="label-mono text-bone-dim transition-colors hover:text-bone"
+                className="label-mono text-bone-dim transition-colors hover:text-orange"
               >
                 {social.label}
               </a>

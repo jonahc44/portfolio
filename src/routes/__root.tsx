@@ -23,7 +23,7 @@ function RootComponent() {
       <a
         href="#main"
         className={buttonClass(
-          'acid',
+          'primary',
           'sm',
           'sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-100',
         )}
@@ -57,13 +57,16 @@ function RootComponent() {
 function NotFound() {
   return (
     <div className="mx-auto grid max-w-6xl place-items-center px-5 py-32 text-center sm:px-8">
+      {/* accent exception: the one place a resting accent is the message and
+          not a label. A hazard colour on a dead route is the readout doing its
+          actual job, and this is a page nobody stays on. */}
       <p className="label-mono mb-5 text-orange">Error / 404</p>
       <h1 className="display-wide text-6xl font-semibold sm:text-8xl">404</h1>
       <p className="mt-5 max-w-md text-bone-dim">
         This route doesn&apos;t resolve. The page was moved, deleted, or never
         existed in the first place.
       </p>
-      <Link to="/" className={buttonClass('line', 'md', 'mt-9')}>
+      <Link to="/" className={buttonClass('quiet', 'md', 'mt-9')}>
         Return home
       </Link>
     </div>

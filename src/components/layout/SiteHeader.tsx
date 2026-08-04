@@ -9,7 +9,19 @@ const navItems = [
 ] as const
 
 const linkBase =
-  'display-wide px-3 py-1.5 text-xs font-semibold text-bone-dim transition-colors duration-150 ease-ui hover:text-bone'
+  'display-wide px-3 py-1.5 text-xs font-semibold text-bone-dim transition-colors duration-150 ease-ui hover:text-acid-ink'
+
+/**
+ * The current page is a bone fill rather than an accent one — "where you are"
+ * is a resting fact, and the resting page is greyscale. It still answers the
+ * pointer, taking the same bone-fill-to-accent-fill step the primary button
+ * does, so no item in the nav is a dead spot under the cursor.
+ *
+ * The `!` beats `linkBase` regardless of the order the two class strings land
+ * in the sheet. The hover pair outranks the resting pair on specificity, so
+ * marking both important doesn't strand the fill at bone.
+ */
+const linkActive = 'bg-bone text-ground! hover:bg-acid hover:text-on-accent!'
 
 export function SiteHeader() {
   return (
@@ -18,7 +30,7 @@ export function SiteHeader() {
         <Link to="/" className="group flex min-w-0 items-center gap-2.5 justify-self-start">
           <span
             aria-hidden
-            className="grid size-6 shrink-0 place-items-center bg-acid font-display text-xs font-bold text-on-accent"
+            className="grid size-6 shrink-0 place-items-center bg-bone font-display text-xs font-bold text-ground transition-colors duration-150 ease-ui group-hover:bg-acid group-hover:text-on-accent"
           >
             JC
           </span>
@@ -35,9 +47,7 @@ export function SiteHeader() {
                   to={item.to}
                   activeOptions={{ exact: item.to === '/' }}
                   className={linkBase}
-                  activeProps={{
-                    className: 'bg-acid text-on-accent! hover:text-on-accent',
-                  }}
+                  activeProps={{ className: linkActive }}
                 >
                   {item.label}
                 </Link>

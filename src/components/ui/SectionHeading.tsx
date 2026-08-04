@@ -27,7 +27,7 @@ export function SectionHeading({
       )}
     >
       <div>
-        <p className="label-mono mb-3 text-orange">{index}</p>
+        <p className="label-mono mb-3 text-bone-dim">{index}</p>
         <h2 className="display-wide text-2xl font-semibold sm:text-3xl">
           {title}
         </h2>

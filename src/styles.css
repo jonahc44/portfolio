@@ -10,11 +10,26 @@
 
    Two rules do most of the work:
 
-     1. Ground and text are warm greys. Everything structural separates by
-        grey value alone.
-     2. There are exactly two accents, and they mean different things:
-          acid   — affirmative state and the single primary action per view
-          orange — the readout layer: eyebrows, indices, advisory status
+     1. The resting page is greyscale. Ground, text, rules, fills, status,
+        indices — everything separates by grey value, weight or form alone.
+        A screenshot of the page sitting still has almost no colour in it.
+     2. Colour is what happens when you touch something. Both accents live in
+        interaction states, split by where the thing takes you:
+          acid   — stays here: primary actions, nav, filters, the lead panel
+          orange — hands you off: links to other sites, the ones marked ↗
+
+   Mail counts as acid, not orange: composing a message is the thing the
+   contact page is for, so it reads as the primary action rather than as a
+   handoff. Orange is strictly "this navigates away from the portfolio".
+
+   Spending the palette this way turns colour into a signal rather than
+   decoration. When the page is grey at rest, one green edge under the cursor
+   is unmissable at any size, where an already-colourful page has to shout to
+   show the same state change. The two hues stay legible as a pair because they
+   rarely appear at once — you are hovering one thing.
+
+   The exceptions are deliberate and few, each marked `accent exception` at its
+   site: the 404 eyebrow, where the colour is the message rather than a label.
 
    No glow, no bloom, no gradients, no rounded corners. Rectilinear and flat.
 
@@ -49,7 +64,8 @@
   --color-bone-dim: #a3a19a;
   --color-bone-faint: #7a786f;
 
-  /* Green phosphor. Affirmative state + the one primary action per view.
+  /* Green phosphor. The on-page interaction colour: what a primary action, a
+     nav item or the lead panel turns when the pointer is on it.
 
      The accent has two jobs, and on a dark ground one colour does both: the
      same green works as a fill and as ink on the ground. On a light ground it
@@ -68,9 +84,13 @@
      bright in both, so what reads on it is ink, never the ground. */
   --color-on-accent: #1b1b19;
 
-  /* Hazard orange. The labelling layer — never an action. Bright enough that
-     it must stay rare and small: mono labels only, never a paragraph or a fill
-     larger than a few pixels. */
+  /* Hazard orange. The outbound interaction colour: what a link turns when it
+     is about to take you off the portfolio. Never an action on this page, and
+     never a resting fill — bright enough that it stays rare and momentary.
+
+     Unlike acid it has no `-ink` split, because it is only ever ink: it labels
+     text and hairlines under a pointer and never fills anything, so one value
+     per scheme covers it. */
   --color-orange: #fc6f1e;
   --color-orange-2: #e05c11; /* hover / pressed */
   --color-orange-deep: #5a2a0a; /* low-emphasis fills and rules */
@@ -117,11 +137,11 @@
      invert around the grey scale, holding the contrast ratios the dark scheme
      already sets, and the accents swap duty:
 
-       dark   acid green is the primary  ·  hazard orange is the readout
-       light  burnt orange is the primary ·  deep phosphor is the readout
+       dark   acid green is on-page  ·  hazard orange is outbound
+       light  burnt orange is on-page ·  deep phosphor is outbound
 
-     Both hues survive the change of scheme; only which one carries the primary
-     action moves. The reason is physical rather than decorative — a bright
+     Both hues survive the change of scheme; only which one carries the on-page
+     interaction moves. The reason is physical rather than decorative — a bright
      accent reads as lit against a dark ground, and as washed-out against paper.
      On paper the accent has to be the *darker*, more saturated ink, and of the
      two, orange is the one that stays itself when it goes deep. Green goes

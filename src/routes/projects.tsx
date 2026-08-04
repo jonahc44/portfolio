@@ -35,7 +35,9 @@ function ProjectsPage() {
               aria-pressed={filter === tag}
               className="cursor-pointer"
             >
-              <Tag active={filter === tag}>{tag}</Tag>
+              <Tag interactive active={filter === tag}>
+                {tag}
+              </Tag>
             </button>
           ))}
         </div>
