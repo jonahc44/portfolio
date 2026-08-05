@@ -117,6 +117,16 @@ firebase login     # once per machine
 npm run deploy
 ```
 
+Both npm scripts pass `--project default`, which forces the alias in
+`.firebaserc`. Without it the CLI's *active project* wins — a stray
+`firebase init` or `firebase use` in any directory can silently retarget your
+deploy at a different project. CI pins `projectId` explicitly for the same
+reason.
+
+Do **not** run `firebase init hosting` here. It rewrites the config below, and
+its framework auto-detection fails outright (`Could not load dependency vite`)
+because the standalone CLI bundles Node 20.18.2 while Vite 8 needs ≥20.19.
+
 `firebase.json` covers the two things a Vite SPA needs on a static host:
 
 - **Rewrite** `**` → `/index.html`, so deep links like `/projects` reach the

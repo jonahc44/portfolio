@@ -11,8 +11,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "serve": "firebase emulators:start --only hosting",
-    "deploy": "npm run build && firebase deploy --only hosting"
+    "serve": "firebase emulators:start --only hosting --project default",
+    "deploy": "npm run build && firebase deploy --only hosting --project default"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",
