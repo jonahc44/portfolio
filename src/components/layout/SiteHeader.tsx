@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { LogoMark } from '#/components/ui/LogoMark'
 import { profile } from '#/data/profile'
 
 const navItems = [
@@ -28,12 +29,19 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 border-b border-line bg-ground">
       <div className="mx-auto grid h-16 max-w-6xl grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-4 px-5 sm:px-8">
         <Link to="/" className="group flex min-w-0 items-center gap-2.5 justify-self-start">
-          <span
+          {/* The mark carries no fill of its own. The old chip was a bone
+              square with JC set in it, but the monogram needs every pixel it
+              can get — knocking it out of a square would cost it the padding
+              and the initials stop reading. Bare, it takes the same
+              bone-to-accent step under the pointer that the chip did.
+
+              28px, not 24: below about 26 the J and C stop resolving and the
+              mark reads as one dense glyph. It is still under the nav labels
+              in weight, so the header keeps its balance. */}
+          <LogoMark
             aria-hidden
-            className="grid size-6 shrink-0 place-items-center bg-bone font-display text-xs font-bold text-ground transition-colors duration-150 ease-ui group-hover:bg-acid group-hover:text-on-accent"
-          >
-            JC
-          </span>
+            className="h-7 w-auto shrink-0 text-bone transition-colors duration-150 ease-ui group-hover:text-acid-ink"
+          />
           <span className="display-wide truncate text-sm font-semibold transition-colors group-hover:text-bone">
             {profile.name}
           </span>

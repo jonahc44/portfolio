@@ -9,6 +9,8 @@ npm run dev        # http://localhost:3000
 npm run build      # -> dist/
 npm run preview
 npm run typecheck
+npm run serve      # firebase hosting emulator -> http://localhost:5000
+npm run deploy     # build + deploy to firebase hosting
 ```
 
 ## Where to edit what
@@ -104,6 +106,69 @@ font-size utility, and the collision is a trap worth avoiding.
   all animations and transitions, so individual components don't need their own
   escape hatch. Keep new animation restrained and decorative — never encode
   meaning in motion alone.
+
+## Deployment
+
+Firebase Hosting, static. Project `jonah-portfolio-a3e75f`, live at
+<https://jonah-portfolio-a3e75f.web.app>.
+
+```bash
+firebase login     # once per machine
+npm run deploy
+```
+
+Both npm scripts pass `--project default`, which forces the alias in
+`.firebaserc`. Without it the CLI's *active project* wins — a stray
+`firebase init` or `firebase use` in any directory can silently retarget your
+deploy at a different project. CI pins `projectId` explicitly for the same
+reason.
+
+Do **not** run `firebase init hosting` here. It rewrites the config below, and
+its framework auto-detection fails outright (`Could not load dependency vite`)
+because the standalone CLI bundles Node 20.18.2 while Vite 8 needs ≥20.19.
+
+`firebase.json` covers the two things a Vite SPA needs on a static host:
+
+- **Rewrite** `**` → `/index.html`, so deep links like `/projects` reach the
+  router instead of 404ing.
+- **Cache headers** — `/assets/**` is content-hashed by Vite, so it gets
+  `immutable` for a year; everything else is `no-cache` so a deploy is visible
+  immediately. Both rules match on the *request* path, which is why the broad
+  rule is `**` and not `/index.html` — a request for `/` never literally matches
+  `/index.html`, it only rewrites to it.
+
+There is deliberately **no `predeploy` hook**. The standalone `firebase` CLI
+bundles its own Node and puts it on `PATH`, so `npm`/`npx` invoked from a hook
+run against the wrong runtime. `npm run deploy` sequences the build itself.
+
+### Automatic deploys
+
+`.github/workflows/deploy.yml` deploys to the live channel on every push to
+`master` (and on manual `workflow_dispatch`). It runs `npm ci` → `typecheck` →
+`build` → deploy, so a type error fails the run instead of shipping. Concurrent
+runs queue rather than cancel — interrupting a deploy mid-upload is worse than
+waiting.
+
+`npm run deploy` still works for deploying straight from your machine.
+
+**One-time setup** — CI needs a service account, which is the only credential
+Firebase Hosting accepts from a non-interactive environment. Easiest path:
+
+```bash
+firebase init hosting:github
+```
+
+It creates the service account, grants it hosting-deploy permission, and writes
+the JSON key into a repo secret for you. Say **no** when it offers to overwrite
+the workflow file. It names the secret after the project
+(`FIREBASE_SERVICE_ACCOUNT_JONAH_PORTFOLIO_A3E75F`); the workflow accepts that
+or a plain `FIREBASE_SERVICE_ACCOUNT`, so either works.
+
+To do it by hand instead: create a service account with the **Firebase Hosting
+Admin** role in the Cloud console, download a JSON key, then
+`gh secret set FIREBASE_SERVICE_ACCOUNT < key.json` and delete the local file.
+
+To take the site down without deleting anything, run `firebase hosting:disable`.
 
 ## Notes
 
