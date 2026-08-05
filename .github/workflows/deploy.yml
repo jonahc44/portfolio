@@ -1,0 +1,43 @@
+name: Deploy to Firebase Hosting
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+# Never let two deploys race. Don't cancel a run already in flight —
+# interrupting mid-upload is worse than letting it finish.
+concurrency:
+  group: firebase-hosting-live
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Gate the deploy on a clean typecheck rather than shipping and finding out.
+      - run: npm run typecheck
+
+      - run: npm run build
+
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          # Accepts either name: the short one if you set the secret by hand, or
+          # the long one `firebase init hosting:github` generates. Unset secrets
+          # are empty strings, so `||` falls through to whichever exists.
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT || secrets.FIREBASE_SERVICE_ACCOUNT_JONAH_PORTFOLIO_A3E75F }}
+          projectId: jonah-portfolio-a3e75f
+          channelId: live
