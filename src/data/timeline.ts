@@ -1,6 +1,5 @@
 /**
  * Education and experience, newest first. Rendered on the about page.
- * PLACEHOLDER: replace with your real history.
  */
 
 export type TimelineEntry = {
@@ -15,32 +14,34 @@ export type TimelineEntry = {
 
 export const timeline: Array<TimelineEntry> = [
   {
-    period: '2024 — Present',
-    title: 'B.S. Computer Science',
-    org: 'Your University',
-    kind: 'education',
-    points: [
-      'Coursework in data structures, algorithms, systems programming and databases.',
-      'TODO: add GPA, honors, or relevant coursework worth calling out.',
-    ],
-  },
-  {
-    period: '2025 — Present',
-    title: 'Software Engineering Intern',
-    org: 'Company Name',
+    period: 'January 2025 — Present',
+    title: 'Computer Consultant II',
+    org: 'University of Michigan',
     kind: 'work',
     points: [
-      'TODO: what you built, in one line.',
-      'TODO: the measurable outcome — latency, adoption, bugs closed.',
+      'Debug the hardware–software interface across 30+ campus facilities, diagnosing RS232 serial communication and network topology failures.',
+      'Run real-time incident response over Slack, tightening how resources get allocated during outages.',
     ],
   },
   {
-    period: '2023 — Present',
-    title: 'Independent projects',
-    org: 'Self-directed',
-    kind: 'other',
+    period: 'October 2024 — Present',
+    title: 'AI Lead',
+    org: 'UM::Autonomy',
+    kind: 'work',
     points: [
-      'Building and shipping side projects end to end — see the work page.',
+      'Lead a 30-person AI team across three subteams — computer vision, navigation and controls, and task planning — with weekly design reviews and code walkthroughs on every pipeline.',
+      'Directed integration of deep-learning object detection and LiDAR point cloud classification in ROS2, Python and Docker, improving perception reliability for competition tasks.',
+      'Designed a low-latency telemetry and command architecture on Zenoh and Protobuf for reliable bidirectional traffic across 15+ distributed ROS2 nodes.',
+    ],
+  },
+  {
+    period: 'Expected December 2026',
+    title: 'B.S.E. Computer Science',
+    org: 'University of Michigan, Ann Arbor',
+    kind: 'education',
+    points: [
+      'Coursework in data structures, computer organization, practical data science, linear algebra and cybersecurity.',
+      'CompTIA A+, Network+ and Security+ certified.',
     ],
   },
 ]

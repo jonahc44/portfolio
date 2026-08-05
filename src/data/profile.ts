@@ -1,6 +1,5 @@
 /**
  * Site-wide identity and contact info.
- * PLACEHOLDER: fill in the fields marked TODO with your real details.
  */
 
 export type Social = {
@@ -14,21 +13,19 @@ export const profile = {
   handle: 'jonahc44',
   /** Shown under the hero name, in order. */
   roles: ['Software Engineer', 'Computer Science Student'],
-  /** TODO: your city / region. */
-  location: 'United States',
-  /** TODO: current school + expected graduation. */
-  education: 'B.S. Computer Science — in progress',
+  location: 'Ann Arbor, MI',
+  education:
+    'B.S.E. Computer Science, University of Michigan — expected December 2026',
   email: 'jonahc0508@gmail.com',
   /** One-liner used in the hero. Keep it under ~140 chars. */
   tagline:
-    'I build fast, well-structured software — from low-level systems to the interfaces on top of them.',
+    'I build fast, well-structured software — from autonomy stacks and game engines to the interfaces on top of them.',
   /** Longer bio for the about page. Each string renders as a paragraph. */
   bio: [
-    "I'm a software engineer and computer science student who likes the parts of the stack most people skip: memory layouts, data flow, the reason a thing is slow. I care about software that's understandable a year after it ships.",
-    'Most of my time goes into building things end to end — designing the model, writing the code, and then rewriting the half that turned out wrong. I work mainly in TypeScript, Python, and C/C++, and I pick up whatever a problem actually needs.',
-    "Outside of coursework I'm usually reading source code, breaking something on purpose to see how it fails, or over-engineering a side project like this one.",
+    "I'm a computer science student at the University of Michigan and the AI lead on UM::Autonomy, where I run a 30-person team across computer vision, navigation and controls, and task planning. Most of what I know about software came from watching a perception pipeline fail on the water and having to explain why.",
+    'I like the parts of the stack most people skip: memory layouts, message boundaries, the reason a thing is slow. That shows up in a 2D game engine I wrote in C++ that resolves collisions between 100,000+ entities, and in a telemetry layer built on Zenoh and Protobuf that keeps 15+ distributed ROS2 nodes talking to shore.',
+    "I work end to end when the project calls for it — the photo-sharing site I maintain is React and Next.js on top of a custom OAuth flow I designed against Firebase and Adobe's APIs. I care about software that's still understandable a year after it ships.",
   ],
-  /** TODO: point these at your real accounts. */
   socials: [
     {
       label: 'GitHub',
@@ -37,8 +34,8 @@ export const profile = {
     },
     {
       label: 'LinkedIn',
-      handle: '/in/jonahc44',
-      href: 'https://linkedin.com/in/jonahc44',
+      handle: '/in/jonah-cohen',
+      href: 'https://www.linkedin.com/in/jonah-cohen-411862308',
     },
     {
       label: 'Email',

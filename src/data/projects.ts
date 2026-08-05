@@ -1,9 +1,6 @@
 /**
  * Project catalogue. This is the single source of truth for both the home page
  * ("selected work") and the /projects index.
- *
- * PLACEHOLDER: every entry below is a template. Replace with real work — the
- * shape is what matters, the content is yours.
  */
 
 export type ProjectStatus = 'live' | 'wip' | 'archived'
@@ -31,59 +28,42 @@ export type Project = {
 
 export const projects: Array<Project> = [
   {
-    slug: 'placeholder-systems-project',
-    title: 'Project One',
-    tagline: 'A systems-level thing that does something hard, quickly.',
+    slug: 'game-engine',
+    title: '2D Game Engine',
+    tagline: 'A from-scratch C++ engine that resolves 100,000+ entities.',
     summary:
-      'Replace this with a real project. Say what problem it solves, the one interesting engineering decision you made, and the result — a number is better than an adjective.',
-    stack: ['C++', 'CMake', 'Linux'],
+      'A custom 2D game engine built in modern C++ on SDL2 and Box2D. Collision detection runs on a spatial hash, which is what makes interactions between 100,000+ entities tractable instead of quadratic. An embedded Lua environment exposes a scripting API for component management, and RapidJSON handles engine configuration so scenes scale without recompiling.',
+    stack: ['C++', 'SDL2', 'Box2D', 'Lua', 'RapidJSON'],
     year: 2026,
     status: 'live',
-    links: {
-      repo: 'https://github.com/jonahc44',
-    },
-    featured: true,
-  },
-  {
-    slug: 'placeholder-web-app',
-    title: 'Project Two',
-    tagline: 'A full-stack application with a real user on the other end.',
-    summary:
-      'Replace this with a real project. Mention scale or constraints if they were interesting — concurrent users, dataset size, latency budget.',
-    stack: ['TypeScript', 'React', 'PostgreSQL'],
-    year: 2026,
-    status: 'wip',
-    links: {
-      repo: 'https://github.com/jonahc44',
-      demo: '#',
-    },
-    featured: true,
-  },
-  {
-    slug: 'placeholder-tool',
-    title: 'Project Three',
-    tagline: 'A developer tool built to scratch a personal itch.',
-    summary:
-      'Replace this with a real project. Small tools make good portfolio entries when you can explain exactly why the existing options did not fit.',
-    stack: ['Python', 'CLI'],
-    year: 2025,
-    status: 'live',
-    links: {
-      repo: 'https://github.com/jonahc44',
-    },
-    featured: true,
-  },
-  {
-    slug: 'placeholder-coursework',
-    title: 'Project Four',
-    tagline: 'Coursework worth showing, rebuilt past the grade.',
-    summary:
-      'Replace this with a real project. Academic work counts when you took it further than the assignment required.',
-    stack: ['Java', 'Algorithms'],
-    year: 2025,
-    status: 'archived',
     links: {},
-    featured: false,
+    featured: true,
+  },
+  {
+    slug: 'autonomy-perception-stack',
+    title: 'Autonomous Surface Vessel Stack',
+    tagline: 'Perception and telemetry for a competition autonomous boat.',
+    summary:
+      'The AI stack behind UM::Autonomy’s competition vessel. Deep-learning object detection and LiDAR point cloud classification run as ROS2 nodes in Docker, feeding navigation and task planning. Telemetry and command traffic move over Zenoh and Protobuf — a low-latency bidirectional layer across 15+ distributed nodes — and the whole thing is validated in Gazebo and RViz before it touches water.',
+    stack: ['Python', 'ROS2', 'Docker', 'Zenoh', 'Protobuf', 'Gazebo'],
+    year: 2024,
+    status: 'wip',
+    links: {},
+    featured: true,
+  },
+  {
+    slug: 'photo-website',
+    title: 'Photographer Website',
+    tagline: 'Full-stack photo sharing with a hand-rolled OAuth flow.',
+    summary:
+      'A photo-sharing site in React and Next.js with a responsive TailwindCSS interface. The interesting half is the auth: a custom OAuth flow against Firebase Auth and the Adobe APIs, hardened against CSRF and XSS with cryptographic state validation and HTTP-only signed cookies. Adobe handles upload and image processing, Firebase Storage handles the data, and GitHub Actions deploys the whole stack to Firebase Hosting.',
+    stack: ['TypeScript', 'React', 'Next.js', 'Tailwind CSS', 'Firebase'],
+    year: 2025,
+    status: 'live',
+    links: {
+      repo: 'https://github.com/jonahc44/photo-website',
+    },
+    featured: true,
   },
 ]
 
