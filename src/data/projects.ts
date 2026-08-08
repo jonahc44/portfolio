@@ -36,7 +36,9 @@ export const projects: Array<Project> = [
     stack: ['C++', 'SDL2', 'Box2D', 'Lua', 'RapidJSON'],
     year: 2026,
     status: 'live',
-    links: {},
+    links: {
+      repo: 'https://github.com/jonahc44/game_engine',
+    },
     featured: true,
   },
   {
@@ -64,6 +66,77 @@ export const projects: Array<Project> = [
       repo: 'https://github.com/jonahc44/photo-website',
     },
     featured: true,
+  },
+  {
+    slug: 'h753-node',
+    title: 'STM32H7 Telemetry Node',
+    tagline: 'A bare-metal FreeRTOS node that sleeps until the DMA wakes it.',
+    summary:
+      'Firmware for an STM32H753 telemetry node, written in C on FreeRTOS. Ingestion, crypto, and transmit each run as their own task. The receive path uses UART idle-line detection with DMA into a ring buffer placed in a non-cacheable SRAM region, so the ingest task spends its time blocked on a thread flag rather than polling — the DMA interrupt is what wakes it. Built with CMake against a CubeMX-generated HAL.',
+    stack: ['C', 'FreeRTOS', 'STM32 HAL', 'DMA', 'CMake'],
+    year: 2026,
+    status: 'wip',
+    links: {
+      repo: 'https://github.com/jonahc44/h753-node',
+    },
+    featured: false,
+  },
+  {
+    slug: 'rp64-nixos',
+    title: 'RockPro64 NixOS Host',
+    tagline: 'A declarative single-board Linux host with CAN bus on SPI.',
+    summary:
+      'The whole configuration for a RockPro64 running NixOS, as a flake. The interesting part is the hardware: an MCP2515 CAN controller hangs off SPI, brought up through a device-tree overlay and a systemd oneshot that raises can0 at 500 kbit/s. Secrets are managed with sops-nix and decrypted against the host SSH key, and impermanence keeps the root filesystem disposable — the machine is reproducible from the repo alone.',
+    stack: ['Nix', 'NixOS', 'SocketCAN', 'systemd', 'sops-nix'],
+    year: 2026,
+    status: 'live',
+    links: {
+      repo: 'https://github.com/jonahc44/rp64-nixos',
+    },
+    featured: false,
+  },
+  {
+    slug: 'ai-tutor',
+    title: 'AI Tutor',
+    tagline: 'A split chat-and-editor interface for learning to code.',
+    summary:
+      'A browser workspace that puts a conversation next to a code editor, so an explanation and the code it refers to stay on screen together. Built on Next.js and React 19 with a Radix and Tailwind component layer. Still early — the interface is in place and the tutoring loop behind it is the part I am building out.',
+    stack: ['TypeScript', 'React', 'Next.js', 'Tailwind CSS', 'Radix UI'],
+    year: 2026,
+    status: 'wip',
+    links: {
+      repo: 'https://github.com/jonahc44/ai-tutor',
+    },
+    featured: false,
+  },
+  {
+    slug: 'qb-model',
+    title: 'How Important Is the Quarterback?',
+    tagline: 'A win-rate model that predicts a season to within 1.71 games.',
+    summary:
+      'An inference model that takes a team’s quarterback statistics for a season and predicts its regular-season win rate — a way to ask whether a QB is playing to standard, or whether the rest of the roster is over- or underperforming relative to them. I pulled 2006–2024 passing and rushing data from Pro Football Reference (~2,800 player-seasons), regrouped it by team and year, weighted rate stats like QBR by games played, and normalized counting stats per game so the move to a 17-game season didn’t skew older years. Ridge regression with cross-validated alpha and polynomial features lands at 1.71 games of mean absolute error, down from 2.25 for the baseline.',
+    stack: ['Python', 'pandas', 'scikit-learn', 'Plotly', 'Jekyll'],
+    year: 2025,
+    status: 'live',
+    links: {
+      repo: 'https://github.com/jonahc44/qb-model',
+      writeup: 'https://jonahc44.github.io/qb-model/',
+    },
+    featured: false,
+  },
+  {
+    slug: 'discord-music-bot',
+    title: 'Discord Music Bot',
+    tagline: 'YouTube and Spotify playback in voice chat.',
+    summary:
+      'A TypeScript Discord bot that resolves YouTube and Spotify links, queues them, and streams the audio into a voice channel. Written against discord.js with slash commands registered at deploy time and a small queue model wrapping each track. No longer maintained — the upstream extraction libraries it depended on stopped working.',
+    stack: ['TypeScript', 'Node.js', 'discord.js'],
+    year: 2024,
+    status: 'archived',
+    links: {
+      repo: 'https://github.com/jonahc44/DiscordBot',
+    },
+    featured: false,
   },
 ]
 
