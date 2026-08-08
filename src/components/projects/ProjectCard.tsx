@@ -5,6 +5,8 @@ import { Tag } from '#/components/ui/Tag'
 
 const linkLabels = {
   repo: 'Source',
+  firmware: 'Firmware',
+  host: 'Host OS',
   demo: 'Live',
   writeup: 'Write-up',
 } as const

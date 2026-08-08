@@ -19,6 +19,9 @@ export type Project = {
   status: ProjectStatus
   links: {
     repo?: string
+    /** For projects split across a microcontroller and its host. */
+    firmware?: string
+    host?: string
     demo?: string
     writeup?: string
   }
@@ -36,7 +39,9 @@ export const projects: Array<Project> = [
     stack: ['C++', 'SDL2', 'Box2D', 'Lua', 'RapidJSON'],
     year: 2026,
     status: 'live',
-    links: {},
+    links: {
+      repo: 'https://github.com/jonahc44/game_engine',
+    },
     featured: true,
   },
   {
@@ -64,6 +69,60 @@ export const projects: Array<Project> = [
       repo: 'https://github.com/jonahc44/photo-website',
     },
     featured: true,
+  },
+  {
+    slug: 'adsb-telemetry-gateway',
+    title: 'ADS-B Telemetry Gateway',
+    tagline:
+      'Live aircraft traffic from an antenna to a network topic, encrypted in hardware along the way.',
+    summary:
+      'A hardware-in-the-loop telemetry gateway that carries real ADS-B aircraft traffic across every layer of an embedded stack. An SDR running dump1090 floods an STM32H753 with raw Mode-S frames over UART; the firmware ingests them through a DMA ring buffer placed in an MPU-designated non-cacheable region, so the ingest task blocks on a thread flag instead of taking an interrupt per byte, then hands parsed positions to a FreeRTOS queue where the H7’s hardware AES block encrypts them before they go out over FDCAN. On the other end a RockPro64 running NixOS receives the frames through an MCP2515 CAN controller on SPI, and a C++20 daemon decrypts, deserializes, and republishes them over Zenoh. The host is fully declarative — cross-compiled from x86, secrets under sops-nix, and an ephemeral tmpfs root so that cutting power to the board can’t corrupt it, which is the failure mode that actually matters on a vehicle.',
+    stack: [
+      'C',
+      'C++20',
+      'FreeRTOS',
+      'STM32H7',
+      'Nix',
+      'SocketCAN',
+      'Zenoh',
+      'Protobuf',
+    ],
+    year: 2026,
+    status: 'wip',
+    links: {
+      firmware: 'https://github.com/jonahc44/h753-node',
+      host: 'https://github.com/jonahc44/rp64-nixos',
+    },
+    featured: true,
+  },
+  {
+    slug: 'qb-model',
+    title: 'How Important Is the Quarterback?',
+    tagline: 'A win-rate model that predicts a season to within 1.71 games.',
+    summary:
+      'An inference model that takes a team’s quarterback statistics for a season and predicts its regular-season win rate — a way to ask whether a QB is playing to standard, or whether the rest of the roster is over- or underperforming relative to them. I pulled 2006–2024 passing and rushing data from Pro Football Reference (~2,800 player-seasons), regrouped it by team and year, weighted rate stats like QBR by games played, and normalized counting stats per game so the move to a 17-game season didn’t skew older years. Ridge regression with cross-validated alpha and polynomial features lands at 1.71 games of mean absolute error, down from 2.25 for the baseline.',
+    stack: ['Python', 'pandas', 'scikit-learn', 'Plotly', 'Jekyll'],
+    year: 2025,
+    status: 'live',
+    links: {
+      repo: 'https://github.com/jonahc44/qb-model',
+      writeup: 'https://jonahc44.github.io/qb-model/',
+    },
+    featured: false,
+  },
+  {
+    slug: 'discord-music-bot',
+    title: 'Discord Music Bot',
+    tagline: 'YouTube and Spotify playback in voice chat.',
+    summary:
+      'A TypeScript Discord bot that resolves YouTube and Spotify links, queues them, and streams the audio into a voice channel. Written against discord.js with slash commands registered at deploy time and a small queue model wrapping each track. No longer maintained — the upstream extraction libraries it depended on stopped working.',
+    stack: ['TypeScript', 'Node.js', 'discord.js'],
+    year: 2024,
+    status: 'archived',
+    links: {
+      repo: 'https://github.com/jonahc44/DiscordBot',
+    },
+    featured: false,
   },
 ]
 
