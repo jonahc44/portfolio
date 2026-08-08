@@ -19,6 +19,9 @@ export type Project = {
   status: ProjectStatus
   links: {
     repo?: string
+    /** For projects split across a microcontroller and its host. */
+    firmware?: string
+    host?: string
     demo?: string
     writeup?: string
   }
@@ -68,46 +71,29 @@ export const projects: Array<Project> = [
     featured: true,
   },
   {
-    slug: 'h753-node',
-    title: 'STM32H7 Telemetry Node',
-    tagline: 'A bare-metal FreeRTOS node that sleeps until the DMA wakes it.',
+    slug: 'adsb-telemetry-gateway',
+    title: 'ADS-B Telemetry Gateway',
+    tagline:
+      'Live aircraft traffic from an antenna to a network topic, encrypted in hardware along the way.',
     summary:
-      'Firmware for an STM32H753 telemetry node, written in C on FreeRTOS. Ingestion, crypto, and transmit each run as their own task. The receive path uses UART idle-line detection with DMA into a ring buffer placed in a non-cacheable SRAM region, so the ingest task spends its time blocked on a thread flag rather than polling — the DMA interrupt is what wakes it. Built with CMake against a CubeMX-generated HAL.',
-    stack: ['C', 'FreeRTOS', 'STM32 HAL', 'DMA', 'CMake'],
+      'A hardware-in-the-loop telemetry gateway that carries real ADS-B aircraft traffic across every layer of an embedded stack. An SDR running dump1090 floods an STM32H753 with raw Mode-S frames over UART; the firmware ingests them through a DMA ring buffer placed in an MPU-designated non-cacheable region, so the ingest task blocks on a thread flag instead of taking an interrupt per byte, then hands parsed positions to a FreeRTOS queue where the H7’s hardware AES block encrypts them before they go out over FDCAN. On the other end a RockPro64 running NixOS receives the frames through an MCP2515 CAN controller on SPI, and a C++20 daemon decrypts, deserializes, and republishes them over Zenoh. The host is fully declarative — cross-compiled from x86, secrets under sops-nix, and an ephemeral tmpfs root so that cutting power to the board can’t corrupt it, which is the failure mode that actually matters on a vehicle.',
+    stack: [
+      'C',
+      'C++20',
+      'FreeRTOS',
+      'STM32H7',
+      'Nix',
+      'SocketCAN',
+      'Zenoh',
+      'Protobuf',
+    ],
     year: 2026,
     status: 'wip',
     links: {
-      repo: 'https://github.com/jonahc44/h753-node',
+      firmware: 'https://github.com/jonahc44/h753-node',
+      host: 'https://github.com/jonahc44/rp64-nixos',
     },
-    featured: false,
-  },
-  {
-    slug: 'rp64-nixos',
-    title: 'RockPro64 NixOS Host',
-    tagline: 'A declarative single-board Linux host with CAN bus on SPI.',
-    summary:
-      'The whole configuration for a RockPro64 running NixOS, as a flake. The interesting part is the hardware: an MCP2515 CAN controller hangs off SPI, brought up through a device-tree overlay and a systemd oneshot that raises can0 at 500 kbit/s. Secrets are managed with sops-nix and decrypted against the host SSH key, and impermanence keeps the root filesystem disposable — the machine is reproducible from the repo alone.',
-    stack: ['Nix', 'NixOS', 'SocketCAN', 'systemd', 'sops-nix'],
-    year: 2026,
-    status: 'live',
-    links: {
-      repo: 'https://github.com/jonahc44/rp64-nixos',
-    },
-    featured: false,
-  },
-  {
-    slug: 'ai-tutor',
-    title: 'AI Tutor',
-    tagline: 'A split chat-and-editor interface for learning to code.',
-    summary:
-      'A browser workspace that puts a conversation next to a code editor, so an explanation and the code it refers to stay on screen together. Built on Next.js and React 19 with a Radix and Tailwind component layer. Still early — the interface is in place and the tutoring loop behind it is the part I am building out.',
-    stack: ['TypeScript', 'React', 'Next.js', 'Tailwind CSS', 'Radix UI'],
-    year: 2026,
-    status: 'wip',
-    links: {
-      repo: 'https://github.com/jonahc44/ai-tutor',
-    },
-    featured: false,
+    featured: true,
   },
   {
     slug: 'qb-model',
